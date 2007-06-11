@@ -1,10 +1,11 @@
 ;;; maude-mode.el -- Emacs mode for the programming language Maude
 
-;; Copyright (C) 2004  Free Software Foundation, Inc.
+;; Copyright (C) 2004, 2007  Free Software Foundation, Inc.
 
-;; Author and Maintainer: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
+;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
+;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2004-07-29 14:55 by  (ellefg*ifi.uio.no)>
+;; Time-stamp: <2007-06-11 11:06:04 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -833,8 +834,12 @@
 (defvar maude-mode-syntax-table () 
   "Syntax table for maude-mode")
 
+;;; Claim ownership of `.maude' extension
+(unless (assoc "\\.maude\\'" auto-mode-alist)
+  (add-to-list 'auto-mode-alist '("\\.maude\\'" . maude-mode)))
+
 (defun maude-create-syntax-table ()
-  (if maude-mode-syntax-table () ; If there are none previous
+  (if maude-mode-syntax-table ()        ; If there are none previous
     (setq maude-mode-syntax-table (make-syntax-table))
     (set-syntax-table maude-mode-syntax-table)))
 
@@ -896,8 +901,6 @@
  (run-hooks 'maude-mode-hook)
  (make-local-variable 'comment-start)
  (setq comment-start "***")
- (setq local-abbrev-table maude-mode-abbrev-table)
- (message "Some new features in Maude-mode 2004-07-05.  Press C-h m!")
-)
+ (setq local-abbrev-table maude-mode-abbrev-table))
 
 (provide 'maude-mode)

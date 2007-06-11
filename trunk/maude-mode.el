@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-11 11:24:59 rudi>
+;; Time-stamp: <2007-06-11 14:14:20 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -34,7 +34,20 @@
 ;; Doesnt know wheter run-maude work at the moment.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar maude-mode-hook nil)
+(defgroup maude nil
+  "Major mode for editing files in the programming language Maude."
+  :group 'languages)
+
+(defcustom maude-command "/usr/local/bin/maude"
+  "Path to the maude executable.  Use \\[run-maude] to run maude."
+  :type 'file
+  :group 'maude)
+
+(defcustom maude-mode-hook nil
+  "Hook for customizing `maude-mode'."
+  :type 'hook
+  :group 'maude)
+
 ;; Make a keymap (map from keypresses to emacs functions)
 (defvar maude-mode-map nil
   "Keymap for Maude major mode")
@@ -48,7 +61,6 @@
 ;; For documentation on the functionality provided by comint mode, and
 ;; the hooks available for customising it, see the file `comint.el'.
 (require 'comint)
-(setq maude-cmd "/local/bin/maude")
 (require 'derived)
 
 
@@ -114,9 +126,9 @@
 (defun run-maude ()
   (interactive)
   (save-buffer)
-  (setq maude-buffer (make-comint "Maude" maude-cmd ))
+  (setq maude-buffer (make-comint "Maude" maude-command ))
   ;; in 99% you don't wanna know...
-  (comint-send-string "Maude" "set show timing off .\n")  
+  ;;  (comint-send-string "Maude" "set show timing off .\n")  
   (switch-to-buffer-other-window maude-buffer)
   (maude-running-mode)
   (other-window -1))
@@ -125,7 +137,7 @@
   (interactive)
   (run-maude)
   (comint-send-string "Maude" 
-		      (concat "in " (file-name-directory maude-cmd) 
+		      (concat "in " (file-name-directory maude-command) 
 			      "full-maude.maude\n"))
   (comint-send-string "Maude" "loop init .\n")
   (switch-to-buffer-other-window maude-buffer)

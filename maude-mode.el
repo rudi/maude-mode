@@ -211,6 +211,10 @@
 	"Regexps to be coloured with warning-face")
 
 ; Making faces
+(make-face 'attribute-face)
+(make-face 'attribute-value-face)
+(make-face 'element-face)
+
 (setq attribute-face 'attribute-face)
 (setq attribute-value-face 'attribute-value-face)
 (setq element-face 'element-face)

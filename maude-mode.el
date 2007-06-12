@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-12 11:43:08 rudi>
+;; Time-stamp: <2007-06-12 12:20:44 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -59,15 +59,10 @@
   :type 'hook
   :group 'maude)
 
-;; Make a keymap (map from keypresses to emacs functions)
-(defvar maude-mode-map nil
-  "Keymap for Maude major mode")
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Running Maude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This currently does not work on my Windows machine.
-;; Don't know whether it still works on Unix.
+;; This is tested on Unix only.
 
 ;; For documentation on the functionality provided by comint mode, and
 ;; the hooks available for customising it, see the file `comint.el'.
@@ -95,16 +90,6 @@ This is intended to go into `comint-preoutput-filter-functions'."
       ""
     output-string))
 
-(if maude-mode-map nil
-  (progn
-    (setq maude-mode-map (make-keymap))
-    (define-key maude-mode-map "\C-c\C-c" 'maude-send-paragraph)
-    (define-key maude-mode-map "\C-c\C-r" 'maude-send-region)
-    (define-key maude-mode-map "\C-c\C-b" 'maude-send-buffer)
-    (define-key maude-mode-map "\t" 'maude-indent-line)))
-
-
-
 ;; for running Maude
 (defvar inferior-maude-buffer nil
   "Defines the buffer to call the Maude engine in")
@@ -115,10 +100,10 @@ This is intended to go into `comint-preoutput-filter-functions'."
   (if (buffer-live-p inferior-maude-buffer)
       (save-excursion
 	(comint-send-region inferior-maude-buffer start end)
-	(if (string-match "\n$" (buffer-substring start end))
-	    ()
-	  (comint-send-string inferior-maude-buffer "\n"))
-	(message "Sent string to buffer %s." (buffer-name inferior-maude-buffer))
+	(unless (string-match "\n$" (buffer-substring start end))
+	  (comint-send-string inferior-maude-buffer "\n")
+          (message "Sent string to buffer %s."
+                   (buffer-name inferior-maude-buffer)))
 ;;         (if maude-pop-to-buffer-after-send-region
 ;;             (pop-to-buffer inferior-maude-buffer)
 ;;           (display-buffer inferior-maude-buffer))
@@ -262,7 +247,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 (setq bold 'bold)
 (setq default 'default)
 
-(defvar maude-start-face () "Face to starting words like fmod in maude")
+(defvar maude-start-face nil "Face to starting words like fmod in maude")
 (make-face 'maude-start-face)
 ;; (defface maude-start-face '((t (:foreground "green" :bold t)))
 ;; 	"Face for starting words like fmod in maude")
@@ -270,20 +255,20 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 (set-face-bold-p 'maude-start-face t)
 (setq maude-start-face 'maude-start-face)
 
-(defvar maude-module-name-face ()
+(defvar maude-module-name-face nil
   "Face to declaration of e.g. modules in maude")
 (make-face 'maude-module-name-face)
 (copy-face 'font-lock-type-face 'maude-module-name-face )
 (set-face-bold-p 'maude-module-name-face t)
 (setq maude-module-name-face 'maude-module-name-face)
 
-(defvar maude-pattern-face () "Face in patterns in ifs and equations")
+(defvar maude-pattern-face nil "Face in patterns in ifs and equations")
 (make-face 'maude-pattern-face)
 ;; (copy-face 'default 'maude-pattern-face)
 (set-face-italic-p 'maude-pattern-face t)
 (setq maude-pattern-face 'maude-pattern-face)
 
-(defvar maude-label-face () "Face on labels in Maude")
+(defvar maude-label-face nil "Face on labels in Maude")
 (defface maude-label-face
   '((((type x w32 mac) (class color))
      (:box (:line-width -1 :style released-button)
@@ -299,20 +284,20 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;; (set-face-bold-p 'maude-label-face t)
 (setq maude-label-face 'maude-label-face)
 
-(defvar maude-file-face () "Face on files and directories")
+(defvar maude-file-face nil "Face on files and directories")
 (make-face 'maude-file-face)
 (copy-face 'maude-module-name-face 'maude-file-face)
 (invert-face 'maude-file-face)
 (setq maude-file-face 'maude-file-face)
 
-(defvar maude-comment-highlight-face ()
+(defvar maude-comment-highlight-face nil
   "Face on 'comment headlines' with four asterisks")
 (make-face 'maude-comment-highlight-face)
 (copy-face 'font-lock-comment-face 'maude-comment-highlight-face)
 (set-face-bold-p 'maude-comment-highlight-face t)
 (setq maude-comment-highlight-face 'maude-comment-highlight-face)
 
-(defvar maude-comment-highlight-highlight-face ()
+(defvar maude-comment-highlight-highlight-face nil
   "Face on important 'comment headlines' with five asterisks")
 (make-face 'maude-comment-highlight-highlight-face)
 (copy-face 'maude-comment-highlight-face
@@ -321,7 +306,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 (setq maude-comment-highlight-highlight-face
       'maude-comment-highlight-highlight-face)
 
-(defvar maude-end-face () "Face on the final '.'")
+(defvar maude-end-face nil "Face on the final '.'")
 (make-face 'maude-end-face)
 (copy-face 'bold 'maude-end-face)
 (setq maude-end-face 'maude-end-face)
@@ -689,15 +674,15 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 (defun maude-in-comment-p () "Return t if this is in a comment.  Currently handles only monoline comments"
   (interactive)
   (save-excursion
-    (let ((answer ()) (decision-made ()))
+    (let ((answer nil) (decision-made nil))
       (while (not decision-made)
         ;; (message "466 maude-in-comment-p in while")
         (cond ((looking-at "\\*\\*\\*")
                (setq answer t decision-made t))
               ((bolp)
-               (setq answer () decision-made t))
+               (setq answer nil decision-made t))
               ((<= (point) 2)
-               (setq answer () decision-made t)))
+               (setq answer nil decision-made t)))
         (forward-char -1))
       ;; (if answer (message "Yes") (message "No")) ; Debugging
       answer)))
@@ -717,19 +702,19 @@ Use \\[describe-mode] in the process buffer for a list of commands."
           (if (and (looking-at "$") (maude-in-comment-p))
               (search-backward "***"))
           (cond
-           ((<= (point) 1) (setq not-indented ()))
+           ((<= (point) 1) (setq not-indented nil))
            ((or (looking-at (concat start-regexp "(?[fo]?mod\\>"))
                 (looking-at (concat start-regexp "^(")))
             (incf cur-indent standard-indent)
-            (setq not-indented ()))
+            (setq not-indented nil))
            ((or (looking-at (concat start-regexp "end")))
             (incf cur-indent 0)
-            (setq not-indented ()))
+            (setq not-indented nil))
            ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\>"))
                 (looking-at (concat start-regexp "\\<\\(var\\|op\\|sort\\|subsort\\)s?\\>"))
                 (looking-at (concat start-regexp "\\<\\(protecting\\|pr\\|extending\\|ex\\|including\\|inc\\)\\>")))
             (incf cur-indent (* 2 standard-indent))
-            (setq not-indented ()))
+            (setq not-indented nil))
            ((or (looking-at "\\s(")
                 (looking-at "\\<if\\>"))
             (incf cur-indent 2))
@@ -775,7 +760,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;;;; Abbreviations
 ;;;;; Turn this on with (abbrev-mode t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar maude-mode-abbrev-table () 
+(defvar maude-mode-abbrev-table nil
   "Abbrev table for maude mode")
 
 (defun maude-mode-join-attributes () "Join operator/statement attributes.  Turn on with abbrev mode"
@@ -877,16 +862,27 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Tell emacs about the code
-(defvar maude-mode-syntax-table () "Syntax table for maude-mode")
+(defvar maude-mode-syntax-table nil "Syntax table for maude-mode")
 
 ;; Claim ownership of `.maude' extension
 (unless (assoc "\\.maude\\'" auto-mode-alist)
   (add-to-list 'auto-mode-alist '("\\.maude\\'" . maude-mode)))
 
 (defun maude-create-syntax-table ()
-  (if maude-mode-syntax-table ()        ; If there are none previous
+  (unless maude-mode-syntax-table       ; If there are none previous
     (setq maude-mode-syntax-table (make-syntax-table))
     (set-syntax-table maude-mode-syntax-table)))
+
+;; Make a keymap (map from keypresses to emacs functions)
+(defvar maude-mode-map nil
+  "Keymap for Maude major mode")
+
+(unless maude-mode-map
+  (setq maude-mode-map (make-keymap))
+  (define-key maude-mode-map "\C-c\C-c" 'maude-send-paragraph)
+  (define-key maude-mode-map "\C-c\C-r" 'maude-send-region)
+  (define-key maude-mode-map "\C-c\C-b" 'maude-send-buffer)
+  (define-key maude-mode-map "\t" 'maude-indent-line))
 
 ;; ; -> should be treated like a word)
 ;; (modify-syntax-entry ?- "w" maude-mode-syntax-table))
@@ -919,9 +915,9 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   \\[maude-indent-line] indents current line.
   \\[run-maude] starts an interactive maude process.  
   \\[run-full-maude] starts an interactive full maude process.
-  \\[maude-send-paragraph] sends current region to the (full) maude process.
-  \\[maude-send-region] sends current paragraph to the (full) maude process.
-  \\[maude-send-buffer] and the entire buffer, to the process.
+  \\[maude-send-paragraph] sends current paragraph to the (full) maude process.
+  \\[maude-send-region] sends current region to the (full) maude process.
+  \\[maude-send-buffer] sends the entire buffer to the process.
   If you want certain keywords (try operator attributes) to be automatically expanded, put
     (add-hook 'maude-mode-hook 
 			'(lambda () 
@@ -930,7 +926,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   If you don't want the red warnings, put
     (add-hook 'maude-mode-hook
          '(lambda () 
-            (setq maude-warnings ())))
+            (setq maude-warnings nil)))
   in your .emacs .
   The following keys are set:
   \\{maude-mode-map}"

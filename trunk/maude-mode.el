@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-12 12:20:44 rudi>
+;; Time-stamp: <2007-06-12 14:23:01 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -76,7 +76,12 @@
 (define-derived-mode inferior-maude-mode
   comint-mode "inferior-maude"
   "Major mode for running Maude."
-  (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter nil t))
+  (if (< emacs-major-version 22)
+      ;; HACK: emacs 21 knows about the four-argument form of
+      ;; add-hook, but starting an inferior maude process complains
+      ;; about the final `t' in the hook variable.
+      (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter)
+    (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter nil t)))
 
 
 ;;; Try to eliminate multiple "`Maude>'" prompts on one line.

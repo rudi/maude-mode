@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-12 14:23:01 rudi>
+;; Time-stamp: <2007-06-12 16:51:44 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -37,7 +37,7 @@
 (require 'comint)
 (require 'derived)
 (require 'ansi-color)
-
+(require 'derived)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defgroup maude nil
@@ -866,28 +866,13 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;;; Other stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Tell emacs about the code
-(defvar maude-mode-syntax-table nil "Syntax table for maude-mode")
-
 ;; Claim ownership of `.maude' extension
 (unless (assoc "\\.maude\\'" auto-mode-alist)
   (add-to-list 'auto-mode-alist '("\\.maude\\'" . maude-mode)))
 
-(defun maude-create-syntax-table ()
-  (unless maude-mode-syntax-table       ; If there are none previous
-    (setq maude-mode-syntax-table (make-syntax-table))
-    (set-syntax-table maude-mode-syntax-table)))
-
-;; Make a keymap (map from keypresses to emacs functions)
-(defvar maude-mode-map nil
-  "Keymap for Maude major mode")
-
-(unless maude-mode-map
-  (setq maude-mode-map (make-keymap))
-  (define-key maude-mode-map "\C-c\C-c" 'maude-send-paragraph)
-  (define-key maude-mode-map "\C-c\C-r" 'maude-send-region)
-  (define-key maude-mode-map "\C-c\C-b" 'maude-send-buffer)
-  (define-key maude-mode-map "\t" 'maude-indent-line))
+;; Tell emacs about the code
+(defvar maude-mode-syntax-table (make-syntax-table)
+  "Syntax table for maude-mode")
 
 ;; ; -> should be treated like a word)
 ;; (modify-syntax-entry ?- "w" maude-mode-syntax-table))
@@ -914,7 +899,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun maude-mode ()
+(define-derived-mode maude-mode fundamental-mode "Maude"
   "Major mode for editing Maude files.
   Provides syntax highlighting.  
   \\[maude-indent-line] indents current line.
@@ -935,19 +920,18 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   in your .emacs .
   The following keys are set:
   \\{maude-mode-map}"
-  (interactive)
-  (kill-all-local-variables)
-  (maude-create-syntax-table)
-  (make-local-variable 'font-lock-defaults)
+  :group 'maude
+  :syntax-table maude-mode-syntax-table
   (setq font-lock-defaults '(maude-font-lock-keywords))
-  (make-local-variable 'indent-line-function)
-  (setq indent-line-function 'maude-indent-line)
-  (setq major-mode 'maude-mode)
-  (setq mode-name "Maude")
-  (use-local-map maude-mode-map)
-  (run-hooks 'maude-mode-hook)
-  (make-local-variable 'comment-start)
-  (setq comment-start "***")
+  (define-key maude-mode-map (kbd "C-c C-c") 'maude-send-paragraph)
+  (define-key maude-mode-map (kbd "C-c C-r") 'maude-send-region)
+  (define-key maude-mode-map (kbd "C-c C-b") 'maude-send-buffer)
+  ;; Set up comments -- make M-; work
+  (set (make-local-variable 'comment-start) "***")
+  (set (make-local-variable 'comment-start-skip)
+       "---+[ \t]*\\|\\*\\*\\*+[ \t]*")
+  (set (make-local-variable 'comment-end) "")
+  (set (make-local-variable 'indent-line-function) 'maude-indent-line)
   (setq local-abbrev-table maude-mode-abbrev-table))
 
 (provide 'maude-mode)

@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-12 16:51:44 rudi>
+;; Time-stamp: <2007-06-12 17:19:10 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -67,11 +67,9 @@
 ;; For documentation on the functionality provided by comint mode, and
 ;; the hooks available for customising it, see the file `comint.el'.
 
-(defun copy-current-buffer-to-maude ()
-  (interactive)
-  (save-buffer)  
-  (comint-send-string "Maude" (concat "in " (buffer-file-name) "\n")))
-
+(defvar maude-last-source-buffer nil
+  "The last buffer we operated on.
+Used for switching back from the inferior maude buffer.")
 
 (define-derived-mode inferior-maude-mode
   comint-mode "inferior-maude"
@@ -81,7 +79,9 @@
       ;; add-hook, but starting an inferior maude process complains
       ;; about the final `t' in the hook variable.
       (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter)
-    (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter nil t)))
+    (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter nil t))
+  (define-key inferior-maude-mode-map (kbd "C-c C-z")
+    'maude-switch-back-to-source))
 
 
 ;;; Try to eliminate multiple "`Maude>'" prompts on one line.
@@ -112,7 +112,7 @@ This is intended to go into `comint-preoutput-filter-functions'."
 ;;         (if maude-pop-to-buffer-after-send-region
 ;;             (pop-to-buffer inferior-maude-buffer)
 ;;           (display-buffer inferior-maude-buffer))
-        )
+        (setq maude-last-source-buffer (current-buffer)))
     (message "No Maude process started.  M-x run-maude.")))
 
 (defun maude-send-paragraph ()
@@ -124,12 +124,28 @@ This is intended to go into `comint-preoutput-filter-functions'."
 	(end (save-excursion
 	       (forward-paragraph)
 	       (point))))
-    (maude-send-region start end)))
+    (maude-send-region start end)
+    (setq maude-last-source-buffer (current-buffer))))
 
 (defun maude-send-buffer ()
   "Send the buffer contents to the MAUDE process."
   (interactive)
-  (maude-send-region (point-min) (point-max)))
+  (maude-send-region (point-min) (point-max))
+  (setq maude-last-source-buffer (current-buffer)))
+
+(defun maude-switch-to-inferior-maude ()
+  "Switch to the inferior maude buffer.
+If Maude is not running, starts an inferior Maude process."
+  (interactive)
+  (setq maude-last-source-buffer (current-buffer))
+  (run-maude))
+
+(defun maude-switch-back-to-source ()
+  "Switch from the Maude process back to the last active source buffer.
+The last buffer is the one we switched form via \\[switch-to-maude]."
+  (interactive)
+  (when maude-last-source-buffer
+    (pop-to-buffer maude-last-source-buffer)))
 
 (defun run-maude ()
   "Run an inferior Maude process, input and output via buffer *Maude*.
@@ -140,7 +156,8 @@ If a Maude process is already running, just switch to its buffer.
 
 Use \\[describe-mode] in the process buffer for a list of commands."
   (interactive)
-  (unless (comint-check-proc inferior-maude-buffer)
+  (if (comint-check-proc inferior-maude-buffer)
+      (pop-to-buffer inferior-maude-buffer)
     (when (buffer-live-p inferior-maude-buffer)
       (kill-buffer inferior-maude-buffer))
     (setq inferior-maude-buffer
@@ -908,6 +925,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   \\[maude-send-paragraph] sends current paragraph to the (full) maude process.
   \\[maude-send-region] sends current region to the (full) maude process.
   \\[maude-send-buffer] sends the entire buffer to the process.
+  \\[maude-switch-to-inferior-maude] jumps between source buffer and maude process buffer.
   If you want certain keywords (try operator attributes) to be automatically expanded, put
     (add-hook 'maude-mode-hook 
 			'(lambda () 
@@ -926,6 +944,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   (define-key maude-mode-map (kbd "C-c C-c") 'maude-send-paragraph)
   (define-key maude-mode-map (kbd "C-c C-r") 'maude-send-region)
   (define-key maude-mode-map (kbd "C-c C-b") 'maude-send-buffer)
+  (define-key maude-mode-map (kbd "C-c C-z") 'maude-switch-to-inferior-maude)
   ;; Set up comments -- make M-; work
   (set (make-local-variable 'comment-start) "***")
   (set (make-local-variable 'comment-start-skip)

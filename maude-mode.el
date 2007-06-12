@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-11 14:14:20 rudi>
+;; Time-stamp: <2007-06-12 11:43:08 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -33,6 +33,12 @@
 ;; ansi-color.el to use format
 ;; Doesnt know wheter run-maude work at the moment.
 
+;; stuff we need
+(require 'comint)
+(require 'derived)
+(require 'ansi-color)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defgroup maude nil
   "Major mode for editing files in the programming language Maude."
@@ -48,6 +54,11 @@
   :type 'hook
   :group 'maude)
 
+(defcustom inferior-maude-mode-hook nil
+  "Hook for customizing `inferior-maude-mode'."
+  :type 'hook
+  :group 'maude)
+
 ;; Make a keymap (map from keypresses to emacs functions)
 (defvar maude-mode-map nil
   "Keymap for Maude major mode")
@@ -60,9 +71,6 @@
 
 ;; For documentation on the functionality provided by comint mode, and
 ;; the hooks available for customising it, see the file `comint.el'.
-(require 'comint)
-(require 'derived)
-
 
 (defun copy-current-buffer-to-maude ()
   (interactive)
@@ -70,12 +78,22 @@
   (comint-send-string "Maude" (concat "in " (buffer-file-name) "\n")))
 
 
-(define-derived-mode maude-running-mode
-  comint-mode "Maude running"
+(define-derived-mode inferior-maude-mode
+  comint-mode "inferior-maude"
   "Major mode for running Maude."
-  (font-lock-mode)
-  (setq font-lock-keywords
-        (list '("Maude>" 0 font-lock-comment-face t))))
+  (add-hook 'comint-preoutput-filter-functions 'maude-preoutput-filter nil t))
+
+
+;;; Try to eliminate multiple "`Maude>'" prompts on one line.
+(defun maude-preoutput-filter (output-string)
+  "Filter out prompts not at beginning of line.
+Argument OUTPUT-STRING: comint output to filter.
+This is intended to go into `comint-preoutput-filter-functions'."
+  (if (and (string= "Maude> " output-string)
+	   (/= (let ((inhibit-field-text-motion t)) (line-beginning-position))
+	       (point)))
+      ""
+    output-string))
 
 (if maude-mode-map nil
   (progn
@@ -88,22 +106,22 @@
 
 
 ;; for running Maude
-(defvar maude-buffer nil
+(defvar inferior-maude-buffer nil
   "Defines the buffer to call the Maude engine in")
 
 (defun maude-send-region (start end)
   "Send a region to the MAUDE process."
   (interactive "r")
-  (if (buffer-live-p maude-buffer)
+  (if (buffer-live-p inferior-maude-buffer)
       (save-excursion
-	(comint-send-region maude-buffer start end)
+	(comint-send-region inferior-maude-buffer start end)
 	(if (string-match "\n$" (buffer-substring start end))
 	    ()
-	  (comint-send-string maude-buffer "\n"))
-	(message "Sent string to buffer %s." (buffer-name maude-buffer))
+	  (comint-send-string inferior-maude-buffer "\n"))
+	(message "Sent string to buffer %s." (buffer-name inferior-maude-buffer))
 ;;         (if maude-pop-to-buffer-after-send-region
-;;             (pop-to-buffer maude-buffer)
-;;           (display-buffer maude-buffer))
+;;             (pop-to-buffer inferior-maude-buffer)
+;;           (display-buffer inferior-maude-buffer))
         )
     (message "No Maude process started.  M-x run-maude.")))
 
@@ -124,14 +142,26 @@
   (maude-send-region (point-min) (point-max)))
 
 (defun run-maude ()
+  "Run an inferior Maude process, input and output via buffer *Maude*.
+Runs the hook `inferior-maude-mode-hook' (after `comint-mode-hook'
+is run).
+
+If a Maude process is already running, just switch to its buffer.
+
+Use \\[describe-mode] in the process buffer for a list of commands."
   (interactive)
-  (save-buffer)
-  (setq maude-buffer (make-comint "Maude" maude-command ))
-  ;; in 99% you don't wanna know...
-  ;;  (comint-send-string "Maude" "set show timing off .\n")  
-  (switch-to-buffer-other-window maude-buffer)
-  (maude-running-mode)
-  (other-window -1))
+  (unless (comint-check-proc inferior-maude-buffer)
+    (when (buffer-live-p inferior-maude-buffer)
+      (kill-buffer inferior-maude-buffer))
+    (setq inferior-maude-buffer
+          (make-comint "Maude" maude-command nil "-ansi-color"))
+    (pop-to-buffer inferior-maude-buffer)
+    (inferior-maude-mode)
+    (ansi-color-for-comint-mode-on)
+    (sit-for 0.1)                       ; eliminates multiple prompts
+    (comint-simple-send inferior-maude-buffer "set show timing off .\n")
+    ;; TODO: "cd <dir of buffer>"
+    ))
 
 (defun run-full-maude ()
   (interactive)
@@ -140,7 +170,7 @@
 		      (concat "in " (file-name-directory maude-command) 
 			      "full-maude.maude\n"))
   (comint-send-string "Maude" "loop init .\n")
-  (switch-to-buffer-other-window maude-buffer)
+  (switch-to-buffer-other-window inferior-maude-buffer)
   (other-window -1))
 
 

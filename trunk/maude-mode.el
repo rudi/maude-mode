@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-12 17:19:10 rudi>
+;; Time-stamp: <2007-06-13 16:44:57 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -714,7 +714,10 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 (defun maude-indent-line ()
   "Indent current line as maude code.  Uses the variable standard-indent."
   (interactive)
-  (let ((start-regexp "^\\s-*") (not-indented t) (cur-indent 0))
+  (let ((savep (> (current-column) (current-indentation)))
+        (start-regexp "^\\s-*")
+        (not-indented t)
+        (cur-indent 0))
     (save-excursion
       (beginning-of-line)
       (save-excursion 
@@ -772,10 +775,12 @@ Use \\[describe-mode] in the process buffer for a list of commands."
     ;;     (if (looking-at "^\\s-*$") (insert-string "...."))
     ;;     (print cur-indent)
     ;;     (insert-string "X") ; See delete-char 1 down
-    (indent-line-to (max 0 cur-indent)))
+    (if savep
+        (save-excursion (indent-line-to (max 0 cur-indent)))
+      (indent-line-to (max 0 cur-indent))))
   ;; (delete-char 1) ; Delete the X.  This is so we can indent empty lines
   (cond ((looking-at "^$") ; Ugly hack to fix indent in empty lines.  Doesnt work well between modules.
-         (insert-string (make-string (/ standard-indent 2) ?\t ))))
+         (insert-string (make-string standard-indent ? ))))
   (if (looking-at "^\\s-*$") (end-of-line)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

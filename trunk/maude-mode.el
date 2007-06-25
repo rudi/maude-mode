@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-25 16:55:33 rudi>
+;; Time-stamp: <2007-06-25 17:00:08 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -675,7 +675,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list "\\(\\.\\)\\s-*$" '(1 bold append t)) ;; To be removed
    (list "\\(\\.\\)\\s-*\\*\\*\\*" '(1 bold append t)) ;; To be removed
    ;; COMMENTS
-   (list "\\(\\*\\{3\\}.*$\\)" '(1 font-lock-comment-face t t))
+   (list "\\([-*]\\{3\\}.*$\\)" '(1 font-lock-comment-face t t))
    (list "\\((\\*\\{3\\}.*\\*)\\)" '(1 font-lock-comment-face t t))
    (list "\\((\\*\\{3\\}.*\\)" '(1 font-lock-comment-face t t)) ; Poor-man multiline comments: Just the first and last line
    (list "\\(.*\\*)\\)" '(1 font-lock-comment-face t t)) ; End of multiline comment

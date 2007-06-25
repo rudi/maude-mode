@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-23 17:50:09 rudi>
+;; Time-stamp: <2007-06-25 15:07:21 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -236,7 +236,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   "Maude keywords")
 
 
-(defconst maude-warnings 
+(defconst maude-warnings
   (concat "\\(\\<eof\\>"                ; eof
           "\\|\\<quit\\>\\|^\\s-*?q\\>" ; quit
           "\\|\\w\\.\\s-*?$"            ; text.
@@ -259,9 +259,9 @@ Use \\[describe-mode] in the process buffer for a list of commands."
           "\\|\\<prec\\w*\\>\\s-*9[6-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*1[1-3][0-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*[2-9][0-9][0-9]" ; Illegal high precedences?
-          "\\|^omod\\|^fth\\|^view" ; Should have full maude here, with "(" before
-          "\\)") 
-  "Regexps to be coloured with warning-face")
+          "\\|^omod\\|^fth" ; Should have full maude here, with "(" before
+          "\\)")
+  "Regexps to be coloured with warning-face.")
 
 ;; Making faces
 (make-face 'attribute-face)
@@ -465,14 +465,27 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list (concat (maude-flk-keyword "resume\\|abort\\|step\\|where") maude-flk-end-command)
          '(1 maude-start-face t t) '(2 maude-end-face t t))
 ;;; MODULE
-   (list "(?\\(fmod\\|mod\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
+   (list "(?\\(fmod\\|mod\\|view\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
          '(1 maude-start-face prepend t)
          '(2 maude-module-name-face prepend t)
          '(3 maude-start-face prepend t))
-   (list  "\\(endm\\|endfm\\)"
+   (list  "\\(endm\\|endfm\\|endv\\)"
           '(1 maude-start-face prepend t))
    (list (concat "\\<\\(\\<protecting\\|extending\\|including\\|ex\\|pr\\|inc\\)\\>\\s-+" maude-flk-mod-exp maude-flk-end)
          '(1 font-lock-keyword-face append t) '(2 maude-module-name-face prepend t)'(3 maude-end-face))
+;;; VIEW
+   (list (concat (maude-flk-keyword "view") "\\(.*\\)\\s-+?"
+                 (maude-flk-keyword "from") maude-flk-mod-exp
+                 (maude-flk-keyword "to") maude-flk-mod-exp
+                 (maude-flk-keyword "is"))
+         '(1 maude-start-face prepend t) ; view
+         '(2 maude-module-name-face prepend t)
+         '(3 maude-start-face prepend t) ; from
+         '(4 maude-module-name-face prepend t)
+         '(5 maude-start-face prepend t) ; to
+         '(6 maude-module-name-face prepend t)
+         '(7 maude-start-face prepend t)) ; is
+   ;; endv handled above together with endm, endfm
 ;;; MODULE * TYPES
    (list (concat (maude-flk-keyword "sorts?") "\\(\\([a-zA-Z0-9()]+\\s-+\\)+\\)" maude-flk-end) ; The double \\(\\) because font-lock only match once a line
          '(1 font-lock-keyword-face)
@@ -615,19 +628,8 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(1 maude-start-face prepend t)
          '(2 maude-module-name-face prepend t)
          '(3 maude-start-face prepend t))
-   (list  "\\(endom\\|endfth\\|endth\\|endoth\\|endv\\))"
+   (list  "\\(endom\\|endfth\\|endth\\|endoth\\))"
           '(1 maude-start-face prepend t))
-   (list (concat (maude-flk-keyword "view") "\\(.*\\)\\s-+?"
-                 (maude-flk-keyword "from") maude-flk-mod-exp
-                 (maude-flk-keyword "to") maude-flk-mod-exp
-                 (maude-flk-keyword "is"))
-         '(1 maude-start-face prepend t) ; view
-         '(2 maude-module-name-face prepend t)
-         '(3 maude-start-face prepend t) ; from
-         '(4 maude-module-name-face prepend t)
-         '(5 maude-start-face prepend t) ; to
-         '(6 maude-module-name-face prepend t)
-         '(7 maude-start-face prepend t)) ; is
    (list (concat (maude-flk-keyword "sort\\|class") maude-flk-type-name
                  (maude-flk-keyword "to") maude-flk-type-name maude-flk-end)
          '(1 font-lock-keyword-face prepend t) ; sort

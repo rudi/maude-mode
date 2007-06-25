@@ -1,0 +1,5 @@
+2007-06-25  Rudi Schlatte  <rudi@constantly.at>
+
+	* maude-mode.el: change fontification so that equations and
+	rewrite rules across multiple lines are colored.
+

@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-22 16:16:25 rudi>
+;; Time-stamp: <2007-06-23 17:50:09 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -581,42 +581,33 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(6 font-lock-keyword-face prepend t) ; =
          )
    (list (concat "\\<\\(ceq\\|cq\\)\\>\\s-+?" maude-flk-label maude-flk-pattern
-                 "\\(=\\)\\s-+" maude-flk-term
-                 "\\(if\\)\\s-+" maude-flk-pattern maude-flk-end)
+                 "\\(=\\)\\s-+")
          '(1 font-lock-keyword-face prepend t)
          '(3 maude-label-face prepend t) ; [label]
          '(4 font-lock-keyword-face prepend t) ; :
          '(5 maude-pattern-face prepend t)
          '(6 font-lock-keyword-face prepend t) ; =
-         '(8 font-lock-keyword-face prepend t) ; if
-         '(9 maude-pattern-face prepend t)
-         '(10 maude-end-face prepend t))
+         )
                                         ; Statement Attr (as opposed to attr)
-   (list (maude-flk-attribute "nonexec") '(1 attribute-face prepend t))
-   (list (maude-flk-attribute "owise\\|otherwise") '(1 attribute-face prepend t))
-   (list (maude-flk-attribute-value "metadata" "\\w+")       '(1 attribute-face prepend t)      '(2 attribute-value-face prepend t))
-   (list (maude-flk-attribute-value "label" "\\w+")       '(1 attribute-face prepend t)      '(2 attribute-value-face prepend t))
+   (list (maude-flk-attribute "nonexec")
+         '(1 attribute-face prepend t))
+   (list (maude-flk-attribute "owise\\|otherwise")
+         '(1 attribute-face prepend t))
+   (list (maude-flk-attribute-value "metadata" "\\w+")
+         '(1 attribute-face prepend t)
+         '(2 attribute-value-face prepend t))
+   (list (maude-flk-attribute-value "label" "\\w+")
+         '(1 attribute-face prepend t)
+         '(2 attribute-value-face prepend t))
 ;;; MODULE * RULES
                                         ; rl [rule-name] : pattern => result .
-   (list (concat "\\(\\<rl\\>\\)\\s-+?" maude-flk-label maude-flk-pattern
-                 "\\(=>\\)\\s-+" maude-flk-term maude-flk-end)
-         '(1 font-lock-keyword-face prepend t) ; eq
-         '(3 maude-label-face prepend t)       ; [label]
-         '(4 font-lock-keyword-face prepend t) ; :
-         '(5 maude-pattern-face prepend t)     ; pattern
-         '(6 font-lock-keyword-face prepend t) ; =
-         '(8 maude-end-face prepend t))
-   (list (concat "\\(\\<crl\\>\\)\\s-+?" maude-flk-label maude-flk-pattern
-                 "\\(=>\\)\\s-+" maude-flk-term
-                 "\\(if\\)\\s-+" maude-flk-pattern maude-flk-end)
-         '(1 font-lock-keyword-face prepend t)
-         '(3 maude-label-face prepend t) ; [label]
-         '(4 font-lock-keyword-face prepend t) ; :
-         '(5 maude-pattern-face prepend t)
-         '(6 font-lock-keyword-face prepend t) ; =
-         '(8 font-lock-keyword-face prepend t) ; if
-         '(9 maude-pattern-face prepend t)
-         '(10 maude-end-face prepend t))
+   (list (concat "\\(\\<c?rl\\>\\)\\s-+?" maude-flk-label)
+         '(1 font-lock-keyword-face) ; rl
+         '(3 maude-label-face)       ; [label]
+         '(4 font-lock-keyword-face) ; :
+         )
+    (list "\\s-\\(=>\\)\\s-"
+          '(1 font-lock-keyword-face prepend t)) ; =>
 ;;; END OF CORE MAUDE GRAMMAR
 ;;; FULL MAUDE
    ;; Don't have the full Maude grammar here, but try to include something
@@ -671,6 +662,11 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(3 font-lock-keyword-face prepend t) ;then
          '(6 font-lock-keyword-face prepend t) ; else
          '(8 font-lock-keyword-face prepend t)) ; fi
+   ;; if condition for ceq, crl
+   (list (concat (maude-flk-keyword "if") maude-flk-pattern maude-flk-end)
+         '(1 font-lock-keyword-face)
+         '(2 maude-pattern-face)
+         '(3 maude-end-face))
 ;;; WARNINGS
    ;;    Remove this if it causes too much confusion.  Ellef 2004-06-20
    (list maude-warnings '(1 font-lock-warning-face prepend t))

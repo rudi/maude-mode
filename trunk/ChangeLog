@@ -2,4 +2,5 @@
 
 	* maude-mode.el: change fontification so that equations and
 	rewrite rules across multiple lines are colored.
+	Support views in core maude.
 

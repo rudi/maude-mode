@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-25 15:07:21 rudi>
+;; Time-stamp: <2007-06-25 16:55:33 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -345,7 +345,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
       maude-flk-pattern "\\(.*?\\)\\s-+?"              ; pattern term
       maude-flk-term "\\(.+\\)\\s-+"                   ; term
       maude-flk-name "\\(\\w+\\)\\s-+" ; General name.  Try to use sth else
-      maude-flk-type-name "\\([a-zA-Z0-9()|]+@?[a-zA-Z0-9()|]*\\s-+\\)" ; sort name.  May contain @ and several ()
+      maude-flk-type-name "\\([a-zA-Z0-9()|{},<>-]+@?[a-zA-Z0-9()|{},<>-]*\\s-+\\)" ; sort name.  May contain @{}-,<> and several ()
       ;; maude-flk-module "\\(\\w\\S-*\\s-+\\)" ; module name	
       maude-flk-mod-id "\\(\\w\\S-*\\s-+\\)" ; module name	
       maude-flk-mod-exp "\\(\\w.*?\\)\\s-+" ; module expression.  May be parametrised module, M*N, M+N, (M)
@@ -487,7 +487,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(7 maude-start-face prepend t)) ; is
    ;; endv handled above together with endm, endfm
 ;;; MODULE * TYPES
-   (list (concat (maude-flk-keyword "sorts?") "\\(\\([a-zA-Z0-9()]+\\s-+\\)+\\)" maude-flk-end) ; The double \\(\\) because font-lock only match once a line
+   (list (concat (maude-flk-keyword "sorts?") "\\(\\([a-zA-Z0-9(){},<>-]+\\s-+\\)+\\)" maude-flk-end) ; The double \\(\\) because font-lock only match once a line
          '(1 font-lock-keyword-face)
          '(2 font-lock-type-face prepend t)
          '(4 maude-end-face prepend t))

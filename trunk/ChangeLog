@@ -1,3 +1,8 @@
+2007-06-26  Rudi Schlatte  <rudi@constantly.at>
+
+	* maude-mode.el (maude-mode-menu, maude-mode): Add "Maude"
+	pull-down menu.
+
 2007-06-25  Rudi Schlatte  <rudi@constantly.at>
 
 	* maude-mode.el: change fontification so that equations and
@@ -5,3 +10,5 @@
 	core maude.
 	(maude-flk-label, maude-font-lock-keywords): support typenames
 	like Map{Nat,Qid} etc.
+	(maude-font-lock-keywords): Support --- comments
+

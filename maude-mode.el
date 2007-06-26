@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-25 17:00:08 rudi>
+;; Time-stamp: <2007-06-26 15:51:43 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -38,6 +38,7 @@
 (require 'derived)
 (require 'ansi-color)
 (require 'derived)
+(require 'easymenu)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defgroup maude nil
@@ -958,7 +959,21 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   (set (make-local-variable 'comment-start-skip)
        "---+[ \t]*\\|\\*\\*\\*+[ \t]*")
   (set (make-local-variable 'comment-end) "")
+  ;; Indentation
   (set (make-local-variable 'indent-line-function) 'maude-indent-line)
-  (setq local-abbrev-table maude-mode-abbrev-table))
+  ;; Abbrevs
+  (setq local-abbrev-table maude-mode-abbrev-table)
+  ;; Menu
+  (easy-menu-add maude-mode-menu maude-mode-map))
+
+;;; Set up the "Maude" pull-down menu
+(easy-menu-define maude-mode-menu maude-mode-map
+  "Maude mode menu."
+  '("Maude"
+    ["Evaluate buffer" maude-send-buffer t]
+    ["Evaluate region" maude-send-region :active mark-active]
+    ["---" nil nil]
+    ["Run Maude" run-maude t]
+    ["Switch to Maude" maude-switch-to-inferior-maude t]))
 
 (provide 'maude-mode)

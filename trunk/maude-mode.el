@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-26 15:51:43 rudi>
+;; Time-stamp: <2007-06-27 14:05:00 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -557,7 +557,8 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list (maude-flk-attribute "frozen") '(1 attribute-face prepend t))
    (list (maude-flk-attribute-value "frozen" "([ 0-9]+)")       '(1 attribute-face prepend t)      '(2 attribute-value-face prepend t))
 ;;; MODULE * VARIABLES
-   (list (concat (maude-flk-keyword "vars?") "\\(\\([0-9a-zA-Z@']+\\s-+\\)*\\)"
+   (list (concat (maude-flk-keyword "vars?")
+                 "\\(\\([0-9a-zA-Z@'_,<>-]+\\s-+\\)*\\)"
                  "\\(:\\)\\s-+" maude-flk-type-name maude-flk-end)
          '(1 font-lock-keyword-face prepend t)
          '(2 font-lock-variable-name-face prepend t)

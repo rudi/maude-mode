@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-27 14:05:00 rudi>
+;; Time-stamp: <2007-06-27 14:12:55 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -761,21 +761,21 @@ Use \\[describe-mode] in the process buffer for a list of commands."
         ;; (message "513")
         (beginning-of-line)
         ;; (message "515")
-        (cond 								
+        (cond
          ((or (looking-at (concat start-regexp "="))
-              (looking-at (concat start-regexp "\\<\\(if\\|then\\|else\\|fi\\)\\>"))
-              (looking-at (concat start-regexp "to"))) ; Full Maude views
+              (looking-at (concat start-regexp "\\<\\(if\\|then\\|else\\|fi\\)\\s-"))
+              (looking-at (concat start-regexp "to\\s-"))) ; Full Maude views
           (incf cur-indent -2))
-         ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\>"))
-              (looking-at (concat start-regexp "\\<\\(including\\|extending\\|protecting\\)\\>"))
-              (looking-at (concat start-regexp "\\<\\(inc\\|ext\\|pr\\)\\>"))
-              (looking-at (concat start-regexp "\\<c?\\(var\\|op\\|sort\\|subsort\\)s?\\>")))
+         ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\s-"))
+              (looking-at (concat start-regexp "\\<\\(including\\|extending\\|protecting\\)\\s-"))
+              (looking-at (concat start-regexp "\\<\\(inc\\|ext\\|pr\\)\\s-"))
+              (looking-at (concat start-regexp "\\<c?\\(var\\|op\\|sort\\|subsort\\)s?\\s-")))
           (setq cur-indent standard-indent))
-         ((or  (looking-at (concat start-regexp "\\<\\(in\\|load\\)\\>"))
-               (looking-at (concat start-regexp "(?\\([fo]?mod\\)\\>"))
-               ;; (looking-at (concat start-regexp "\\<\\(end[fo]?m\\))?\\>"))
+         ((or  (looking-at (concat start-regexp "\\<\\(in\\|load\\)\\s-"))
+               (looking-at (concat start-regexp "(?\\([fo]?mod\\)\\s-"))
+               ;; (looking-at (concat start-regexp "\\<\\(end[fo]?m\\))?\\s-"))
                (looking-at (concat start-regexp "\\<\\(end\\)"))
-               (looking-at (concat start-regexp "(?\\<\\(search\\|red\\|reduce\\|rew\\|rewrite\\|trace\\|x?match\\)")))
+               (looking-at (concat start-regexp "(?\\<\\(search\\|red\\|reduce\\|rew\\|rewrite\\|trace\\|x?match\\)\\s-")))
           (setq cur-indent 0)))))
     ;;     (if (looking-at "^\\s-*$") (insert-string "...."))
     ;;     (print cur-indent)

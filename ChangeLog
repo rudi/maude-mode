@@ -2,6 +2,9 @@
 
 	* maude-mode.el (maude-font-lock-keywords): more permissive
 	variable names.
+	(maude-indent-line): use whitespace instead of word boundaries for
+	indentation of keywords, so e.g. "in-buffer" at beginning of line
+	is not indented like the command "in".
 
 2007-06-26  Rudi Schlatte  <rudi@constantly.at>
 

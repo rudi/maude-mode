@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-06-27 14:12:55 rudi>
+;; Time-stamp: <2007-07-05 15:59:09 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -260,7 +260,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
           "\\|\\<prec\\w*\\>\\s-*9[6-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*1[1-3][0-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*[2-9][0-9][0-9]" ; Illegal high precedences?
-          "\\|^omod\\|^fth" ; Should have full maude here, with "(" before
+          "\\|^omod" ; Should have full maude here, with "(" before
           "\\)")
   "Regexps to be coloured with warning-face.")
 
@@ -466,11 +466,11 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list (concat (maude-flk-keyword "resume\\|abort\\|step\\|where") maude-flk-end-command)
          '(1 maude-start-face t t) '(2 maude-end-face t t))
 ;;; MODULE
-   (list "(?\\(fmod\\|mod\\|view\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
+   (list "(?\\(fmod\\|mod\\|view\\|fth\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
          '(1 maude-start-face prepend t)
          '(2 maude-module-name-face prepend t)
          '(3 maude-start-face prepend t))
-   (list  "\\(endm\\|endfm\\|endv\\)"
+   (list  "\\(endm\\|endfm\\|endv\\|endfth\\)"
           '(1 maude-start-face prepend t))
    (list (concat "\\<\\(\\<protecting\\|extending\\|including\\|ex\\|pr\\|inc\\)\\>\\s-+" maude-flk-mod-exp maude-flk-end)
          '(1 font-lock-keyword-face append t) '(2 maude-module-name-face prepend t)'(3 maude-end-face))

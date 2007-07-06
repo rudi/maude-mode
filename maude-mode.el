@@ -280,20 +280,20 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;; (defface maude-start-face '((t (:foreground "green" :bold t)))
 ;; 	"Face for starting words like fmod in maude")
 (copy-face 'font-lock-variable-name-face 'maude-start-face)
-(set-face-bold-p 'maude-start-face t)
+(make-face-bold 'maude-start-face)
 (setq maude-start-face 'maude-start-face)
 
 (defvar maude-module-name-face nil
   "Face to declaration of e.g. modules in maude")
 (make-face 'maude-module-name-face)
 (copy-face 'font-lock-type-face 'maude-module-name-face )
-(set-face-bold-p 'maude-module-name-face t)
+(make-face-bold 'maude-module-name-face)
 (setq maude-module-name-face 'maude-module-name-face)
 
 (defvar maude-pattern-face nil "Face in patterns in ifs and equations")
 (make-face 'maude-pattern-face)
 ;; (copy-face 'default 'maude-pattern-face)
-(set-face-italic-p 'maude-pattern-face t)
+(make-face-italic 'maude-pattern-face)
 (setq maude-pattern-face 'maude-pattern-face)
 
 (defvar maude-label-face nil "Face on labels in Maude")
@@ -309,7 +309,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   :group 'maude)
 ;; (make-face 'maude-label-face)
 ;; (copy-face 'font-lock-doc-face 'maude-label-face)
-;; (set-face-bold-p 'maude-label-face t)
+;; (make-face-bold 'maude-label-face)
 (setq maude-label-face 'maude-label-face)
 
 (defvar maude-file-face nil "Face on files and directories")
@@ -322,7 +322,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   "Face on 'comment headlines' with four asterisks")
 (make-face 'maude-comment-highlight-face)
 (copy-face 'font-lock-comment-face 'maude-comment-highlight-face)
-(set-face-bold-p 'maude-comment-highlight-face t)
+(make-face-bold 'maude-comment-highlight-face)
 (setq maude-comment-highlight-face 'maude-comment-highlight-face)
 
 (defvar maude-comment-highlight-highlight-face nil

@@ -1,3 +1,7 @@
+2007-07-06  Rudi Schlatte  <rudi@constantly.at>
+
+	* maude-mode.el: initial xemacs support, lightly tested
+
 2007-07-05  Rudi Schlatte  <rudi@constantly.at>
 
 	* maude-mode.el (maude-font-lock-keywords, maude-warnings): fth,

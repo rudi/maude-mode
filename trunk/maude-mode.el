@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-11 12:47:32 rudi>
+;; Time-stamp: <2007-07-11 13:00:20 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -699,16 +699,16 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;;;; Automatic indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun maude-in-comment-p ()
-  "Return t if point is in a comment.
+(defun maude-start-of-comment ()
+  "Return start of comment if point is in a comment, nil otherwise.
 Currently handles only monoline comments."
   (interactive)
   (save-excursion
     (let ((answer nil) (decision-made nil))
       (while (not decision-made)
-        ;; (message "466 maude-in-comment-p in while")
-        (cond ((looking-at "\\*\\*\\*")
-               (setq answer t decision-made t))
+        ;; (message "466 maude-start-of-comment in while")
+        (cond ((looking-at "\\(\\*\\*\\*\\)\\|\\(---\\)")
+               (setq answer (point) decision-made t))
               ((bolp)
                (setq answer nil decision-made t))
               ((<= (point) 2)
@@ -728,12 +728,12 @@ Currently handles only monoline comments."
         (cur-indent 0))
     (save-excursion
       (beginning-of-line)
-      (save-excursion 
+      (save-excursion
         ;; Go back one char at a time, stopping when not not-indented.
         ;; cur-indent is how many steps to indent
         (while not-indented
-          (if (and (looking-at "$") (maude-in-comment-p))
-              (search-backward "***"))
+          (when (eolp)
+            (goto-char (or (maude-start-of-comment) (point))))
           (cond
            ((<= (point) 1) (setq not-indented nil))
            ((or (looking-at (concat start-regexp "(?[fo]?mod\\>"))

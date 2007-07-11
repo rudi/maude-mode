@@ -1,3 +1,9 @@
+2007-07-11  Rudi Schlatte  <rudi@constantly.at>
+
+	* maude-mode.el (maude-start-of-comment): renamed from
+	maude-in-comment-p, return start of comment position instead of
+	t/nil.
+
 2007-07-06  Rudi Schlatte  <rudi@constantly.at>
 
 	* maude-mode.el: initial xemacs support, lightly tested

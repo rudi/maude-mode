@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-05 15:59:09 rudi>
+;; Time-stamp: <2007-07-11 12:47:32 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -34,6 +34,7 @@
 ;; Doesnt know wheter run-maude work at the moment.
 
 ;; stuff we need
+(require 'font-lock)
 (require 'comint)
 (require 'derived)
 (require 'ansi-color)
@@ -698,7 +699,9 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;;;; Automatic indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun maude-in-comment-p () "Return t if this is in a comment.  Currently handles only monoline comments"
+(defun maude-in-comment-p ()
+  "Return t if point is in a comment.
+Currently handles only monoline comments."
   (interactive)
   (save-excursion
     (let ((answer nil) (decision-made nil))
@@ -717,7 +720,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;; (defun indent-line-function () " " (interactive) 
 ;; 	(maude-indent-line))
 (defun maude-indent-line ()
-  "Indent current line as maude code.  Uses the variable standard-indent."
+  "Indent current line as maude code.  Use the variable `standard-indent'."
   (interactive)
   (let ((savep (> (current-column) (current-indentation)))
         (start-regexp "^\\s-*")
@@ -737,7 +740,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
                 (looking-at (concat start-regexp "^(")))
             (incf cur-indent standard-indent)
             (setq not-indented nil))
-           ((or (looking-at (concat start-regexp "end")))
+           ((looking-at (concat start-regexp "end"))
             (incf cur-indent 0)
             (setq not-indented nil))
            ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\>"))

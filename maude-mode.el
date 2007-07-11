@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-11 13:00:20 rudi>
+;; Time-stamp: <2007-07-11 13:28:14 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -747,6 +747,11 @@ Currently handles only monoline comments."
                 (looking-at (concat start-regexp "\\<\\(var\\|op\\|sort\\|subsort\\)s?\\>"))
                 (looking-at (concat start-regexp "\\<\\(protecting\\|pr\\|extending\\|ex\\|including\\|inc\\)\\>")))
             (incf cur-indent (* 2 standard-indent))
+            (setq not-indented nil))
+           ;; Maude's object-based notation: align attributes after |
+           ((looking-at (concat start-regexp "< .+ : .+ |[^>]*$"))
+            (setq cur-indent (save-excursion (1+ (progn (search-forward "|")
+                                                        (current-column)))))
             (setq not-indented nil))
            ((or (looking-at "\\s(")
                 (looking-at "\\<if\\>"))

@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-24 13:31:21 rudi>
+;; Time-stamp: <2007-07-24 13:52:39 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -195,12 +195,8 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 (defun run-full-maude ()
   (interactive)
   (run-maude)
-  (comint-send-string "Maude" 
-		      (concat "in " (file-name-directory maude-command) 
-			      "full-maude.maude\n"))
-  (comint-send-string "Maude" "loop init .\n")
-  (switch-to-buffer-other-window inferior-maude-buffer)
-  (other-window -1))
+  (comint-send-string inferior-maude-buffer "in full-maude.maude\n")
+  (comint-send-string inferior-maude-buffer "loop init .\n"))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

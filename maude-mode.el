@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-24 11:51:24 rudi>
+;; Time-stamp: <2007-07-24 13:15:22 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -804,12 +804,9 @@ Currently handles only monoline comments."
 ;;;;; customizing `maude-mode-hook')
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar maude-imenu-generic-expression
-  (list (list nil (rx
-                   (and line-start (0+ blank) (optional "(") (0+ blank)
-                        (or "fmod" "mod" "omod" "fth" "th" "view")
-                        (1+ blank)
-                        (group (1+ (or (syntax symbol) word)))))
-              1))
+  '((nil
+     "^[:blank:]*(?[:blank:]*\\(?:[fo]?mod\\|f?th\\|view\\)[:blank:]+\\(\\C-+\\)"
+     1))
   "Module definitions for `imenu'.")
 
 
@@ -1002,7 +999,11 @@ Currently handles only monoline comments."
   "Maude mode menu."
   '("Maude"
     ["Evaluate buffer" maude-send-buffer t]
-    ["Evaluate region" maude-send-region :active mark-active]
+    ["Evaluate region" maude-send-region
+     :active (if (boundp 'mark-active)
+                 mark-active            ; emacs
+               (region-exists-p)        ; xemacs
+               )]
     ["---" nil nil]
     ["Run Maude" run-maude t]
     ["Switch to Maude" maude-switch-to-inferior-maude t]))

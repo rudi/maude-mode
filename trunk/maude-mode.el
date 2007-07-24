@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-24 13:15:22 rudi>
+;; Time-stamp: <2007-07-24 13:31:21 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -36,6 +36,7 @@
 ;; stuff we need
 (require 'font-lock)
 (require 'comint)
+(require 'compile)
 (require 'derived)
 (require 'ansi-color)
 (require 'derived)
@@ -102,6 +103,15 @@ This is intended to go into `comint-preoutput-filter-functions'."
 ;; for running Maude
 (defvar inferior-maude-buffer nil
   "Defines the buffer to call the Maude engine in")
+
+;;; This alist tells `compilation-minor-mode' how to detect and parse
+;;; compile errors in Maude's output.
+(defvar maude-compilation-regexp-alist
+  `(("^Warning: \"\\([^\"]+\\)\", line \\([0-9]+\\)"
+     1 2)
+    ("^Advisory: \"\\([^\"]+\\)\", line \\([0-9]+\\)"
+     1 2 1))
+  "`compilation-error-regexp-alist' for inferior Maude.")
 
 (defun maude-send-region (start end)
   "Send a region to the MAUDE process."
@@ -174,6 +184,9 @@ Use \\[describe-mode] in the process buffer for a list of commands."
     (pop-to-buffer inferior-maude-buffer)
     (inferior-maude-mode)
     (ansi-color-for-comint-mode-on)
+    (set (make-local-variable 'compilation-error-regexp-alist)
+         maude-compilation-regexp-alist)
+    (compilation-shell-minor-mode 1)
     (sit-for 0.1)                       ; eliminates multiple prompts
     (comint-simple-send inferior-maude-buffer "set show timing off .\n")
     ;; TODO: "cd <dir of buffer>"

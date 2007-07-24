@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-11 13:28:14 rudi>
+;; Time-stamp: <2007-07-24 11:46:39 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -40,6 +40,7 @@
 (require 'ansi-color)
 (require 'derived)
 (require 'easymenu)
+(require 'imenu)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defgroup maude nil
@@ -51,9 +52,10 @@
   :type 'file
   :group 'maude)
 
-(defcustom maude-mode-hook nil
+(defcustom maude-mode-hook (list 'imenu-add-menubar-index)
   "Hook for customizing `maude-mode'."
   :type 'hook
+  :options (list 'imenu-add-menubar-index)
   :group 'maude)
 
 (defcustom inferior-maude-mode-hook nil
@@ -797,6 +799,21 @@ Currently handles only monoline comments."
   (if (looking-at "^\\s-*$") (end-of-line)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; imenu
+;;;;; Turn this on with `imenu-add-menubar-index' (can be done by
+;;;;; customizing `maude-mode-hook')
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar maude-imenu-generic-expression
+  (list (list nil (rx
+                   (and line-start (0+ blank) (optional "(") (0+ blank)
+                        (or "fmod" "mod" "omod" "fth" "th" "view")
+                        (1+ blank)
+                        (group (1+ (or (syntax symbol) word)))))
+              1))
+  "Module definitions for `imenu'.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Abbreviations
 ;;;;; Turn this on with (abbrev-mode t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -973,7 +990,9 @@ Currently handles only monoline comments."
   ;; Abbrevs
   (setq local-abbrev-table maude-mode-abbrev-table)
   ;; Menu
-  (easy-menu-add maude-mode-menu maude-mode-map))
+  (easy-menu-add maude-mode-menu maude-mode-map)
+  ;; imenu
+  (setq imenu-generic-expression maude-imenu-generic-expression))
 
 ;;; Set up the "Maude" pull-down menu
 (easy-menu-define maude-mode-menu maude-mode-map

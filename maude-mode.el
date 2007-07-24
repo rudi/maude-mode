@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-24 11:46:39 rudi>
+;; Time-stamp: <2007-07-24 11:51:24 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -992,7 +992,10 @@ Currently handles only monoline comments."
   ;; Menu
   (easy-menu-add maude-mode-menu maude-mode-map)
   ;; imenu
-  (setq imenu-generic-expression maude-imenu-generic-expression))
+  (setq imenu-generic-expression maude-imenu-generic-expression)
+  ;; speedbar support
+  (when (fboundp 'speedbar-add-supported-extension)
+    (speedbar-add-supported-extension ".maude")))
 
 ;;; Set up the "Maude" pull-down menu
 (easy-menu-define maude-mode-menu maude-mode-map

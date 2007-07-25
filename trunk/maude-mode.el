@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-24 13:52:39 rudi>
+;; Time-stamp: <2007-07-25 16:31:03 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -736,7 +736,8 @@ Currently handles only monoline comments."
   (let ((savep (> (current-column) (current-indentation)))
         (start-regexp "^\\s-*")
         (not-indented t)
-        (cur-indent 0))
+        (cur-indent 0)
+        (start-line (current-line)))
     (save-excursion
       (beginning-of-line)
       (save-excursion
@@ -760,7 +761,8 @@ Currently handles only monoline comments."
             (incf cur-indent (* 2 standard-indent))
             (setq not-indented nil))
            ;; Maude's object-based notation: align attributes after |
-           ((looking-at (concat start-regexp "< .+ : .+ |[^>]*$"))
+           ((and (< (current-line) start-line)
+                 (looking-at (concat start-regexp "< .+ : .+ |[^>]*$")))
             (setq cur-indent (save-excursion (1+ (progn (search-forward "|")
                                                         (current-column)))))
             (setq not-indented nil))

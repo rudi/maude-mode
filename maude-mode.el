@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-07-25 16:31:03 rudi>
+;; Time-stamp: <2007-08-13 10:56:50 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -358,7 +358,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
       maude-flk-pattern "\\(.*?\\)\\s-+?"              ; pattern term
       maude-flk-term "\\(.+\\)\\s-+"                   ; term
       maude-flk-name "\\(\\w+\\)\\s-+" ; General name.  Try to use sth else
-      maude-flk-type-name "\\([a-zA-Z0-9()|{},<>-]+@?[a-zA-Z0-9()|{},<>-]*\\s-+\\)" ; sort name.  May contain @{}-,<> and several ()
+      maude-flk-type-name "\\([a-zA-Z0-9()|{},<>$-]+@?[a-zA-Z0-9()|{},<>$-]*\\s-+\\)" ; sort name.  May contain @{}-,<>$ and several ()
       ;; maude-flk-module "\\(\\w\\S-*\\s-+\\)" ; module name	
       maude-flk-mod-id "\\(\\w\\S-*\\s-+\\)" ; module name	
       maude-flk-mod-exp "\\(\\w.*?\\)\\s-+" ; module expression.  May be parametrised module, M*N, M+N, (M)
@@ -570,7 +570,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list (maude-flk-attribute-value "frozen" "([ 0-9]+)")       '(1 attribute-face prepend t)      '(2 attribute-value-face prepend t))
 ;;; MODULE * VARIABLES
    (list (concat (maude-flk-keyword "vars?")
-                 "\\(\\([0-9a-zA-Z@'_,<>-]+\\s-+\\)*\\)"
+                 "\\(\\([0-9a-zA-Z@$'_,<>-]+\\s-+\\)*\\)"
                  "\\(:\\)\\s-+" maude-flk-type-name maude-flk-end)
          '(1 font-lock-keyword-face prepend t)
          '(2 font-lock-variable-name-face prepend t)
@@ -737,7 +737,8 @@ Currently handles only monoline comments."
         (start-regexp "^\\s-*")
         (not-indented t)
         (cur-indent 0)
-        (start-line (current-line)))
+        (start-line (current-line))
+        (seen-object-end nil))
     (save-excursion
       (beginning-of-line)
       (save-excursion
@@ -761,8 +762,13 @@ Currently handles only monoline comments."
             (incf cur-indent (* 2 standard-indent))
             (setq not-indented nil))
            ;; Maude's object-based notation: align attributes after |
+           ;; if we did not pass something looking like an object end.
+           ;; This is something of a hack.
+           ((looking-at " >")
+            (setq seen-object-end t))
            ((and (< (current-line) start-line)
-                 (looking-at (concat start-regexp "< .+ : .+ |[^>]*$")))
+                 (not seen-object-end)
+                 (looking-at "< .+ : .+ |[^>]*$"))
             (setq cur-indent (save-excursion (1+ (progn (search-forward "|")
                                                         (current-column)))))
             (setq not-indented nil))

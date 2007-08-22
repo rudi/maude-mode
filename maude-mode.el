@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-08-22 13:14:12 rudi>
+;; Time-stamp: <2007-08-22 13:23:36 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -258,29 +258,42 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;; Making faces
 (defface maude-attribute-face nil
   "attributes to operators (like comm and gather)"
-  :group 'maude
-  )
+  :group 'maude)
+(defvar maude-attribute-face 'maude-attribute-face
+  "Face for attributes to operators (like comm and gather)")
+
 (defface maude-attribute-value-face nil
   "values of attributes to operators (like comm and gather)"
   :group 'maude)
+(defvar maude-attribute-value-face 'maude-attribute-value-face
+  "Face for values of attributes to operators (like comm and gather)")
+
 (defface maude-element-face nil
   "about what values we can have in a sort (ctor, subsort etc)"
   :group 'maude)
+(defvar maude-element-face 'maude-element-face
+  "Face for about what values we can have in a sort (ctor, subsort etc)")
 
 (defface maude-start-face
   '((t (:inherit font-lock-variable-name-face :weight bold)))
   "Face to starting words like fmod in maude"
   :group 'maude)
+(defvar maude-start-face 'maude-start-face
+  "Face to starting words like fmod in maude")
 
 (defface maude-module-name-face
   '((t (:inherit font-lock-type-face :weight bold)))
   "Face to declaration of e.g. modules in maude"
   :group 'maude)
+(defvar maude-module-name-face 'maude-module-name-face
+  "Face to declaration of e.g. modules in maude")
 
 (defface maude-pattern-face
   '((t (:slant italic)))
   "Face in patterns in ifs and equations"
   :group 'maude)
+(defvar maude-pattern-face 'maude-pattern-face
+  "Face in patterns in ifs and equations")
 
 (defface maude-label-face
   '((((type x w32 mac) (class color))
@@ -291,26 +304,37 @@ Use \\[describe-mode] in the process buffer for a list of commands."
      (:inverse-video t)))
   "Face on labels in Maude."
   :group 'maude)
+(defvar maude-label-face 'maude-label-face
+  "Face on labels in Maude.")
 
 (defface maude-file-face
   '((t (:inherit maude-module-name-face :inverse-video t)))
   "Face on files and directories"
   :group 'maude)
+(defvar maude-file-face 'maude-file-face
+  "Face on files and directories")
 
 (defface maude-comment-highlight-face
   '((t (:inherit font-lock-comment-face :weight bold)))
   "Face on 'comment headlines' with four asterisks"
   :group 'maude)
+(defvar maude-comment-highlight-face 'maude-comment-highlight-face
+  "Face on 'comment headlines' with four asterisks")
 
 (defface maude-comment-highlight-highlight-face
   '((t (:inherit maude-comment-highlight-face :inverse-video t)))
   "Face on important 'comment headlines' with five asterisks"
   :group 'maude)
+(defvar maude-comment-highlight-highlight-face
+  'maude-comment-highlight-highlight-face
+  "Face on important 'comment headlines' with five asterisks")
 
 (defface maude-end-face
   '((t (:inherit bold)))
   "Face on the final '.'"
   :group 'maude)
+(defvar maude-end-face 'maude-end-face
+  "Face on the final '.'")
 
 ;; Temporary variables for maude-font-lock-regexp.  
 ;; However, didnt find elegant way of setting them local (with let or something)
@@ -355,141 +379,141 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    ;;	 (cons "\:\\|\\.\\|\-\>\\|\~\>\\|\=\\|\=\>\\|\<\=\\|\<\\|\>\\|\\/" 'font-lock-keyword-face)
 ;;; SYSTEM COMMANDS
    (list (concat (maude-flk-keyword "in") maude-flk-file-name "$")
-         '(1 'maude-start-face t t) '(2 'maude-file-face t t))
+         '(1 maude-start-face t t) '(2 maude-file-face t t))
    (list (concat "^\\s-*\\<\\(quit\\|q\\|eof\\|popd\\|pwd\\)\\\\s-*$")
-         '(1 'maude-start-face t t))
+         '(1 maude-start-face t t))
    (list (concat (maude-flk-keyword "cd\\|push") maude-flk-directory "$")
-         '(1 'maude-start-face t t) '(2 'maude-file-face t t))
+         '(1 maude-start-face t t) '(2 maude-file-face t t))
    (list (concat (maude-flk-keyword "ls") "\\(.*?\\)\\s-+" maude-flk-directory "$")
-         '(1 'maude-start-face t t) '(2 font-lock-builtin-face t t) '(3 'maude-file-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-builtin-face t t) '(3 maude-file-face t t))
 ;;; COMMANDS
    (list (concat (maude-flk-keyword "select") maude-flk-name maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'maude-module-name-face t t) '(3 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 maude-module-name-face t t) '(3 maude-end-face t t))
    (list (concat (maude-flk-keyword "load") maude-flk-file-name "$")
-         '(1 'maude-start-face t t) '(2 'maude-file-face t t))
+         '(1 maude-start-face t t) '(2 maude-file-face t t))
    ;; 	 (list (concat (maude-flk-keyword "in") maude-flk-file-name)
-   ;; 				 '(1 'maude-start-face t t) '(2 'maude-module-name-face t t))
+   ;; 				 '(1 maude-start-face t t) '(2 maude-module-name-face t t))
    (list (concat (maude-flk-keyword "parse") maude-flk-in-module "\\(:\\)" maude-flk-term maude-flk-end-command)
-         '(1 'maude-start-face t t) '(3 font-lock-keyword-face t t) '(4 'maude-module-name-face t t) '(6 'maude-end-face))
+         '(1 maude-start-face t t) '(3 font-lock-keyword-face t t) '(4 maude-module-name-face t t) '(6 maude-end-face))
    (list (concat maude-flk-debug (maude-flk-keyword "red\\|reduce")
                  maude-flk-in-module "\\(:\\)" maude-flk-term maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'maude-start-face t t) '(4 font-lock-keyword-face) '(5 'maude-module-name-face t t)
-         '(6 font-lock-keyword-face t t) '(8 'maude-end-face))
+         '(1 maude-start-face t t) '(2 maude-start-face t t) '(4 font-lock-keyword-face) '(5 maude-module-name-face t t)
+         '(6 font-lock-keyword-face t t) '(8 maude-end-face))
    (list (concat maude-flk-debug (maude-flk-keyword "red\\|reduce")
                  maude-flk-term maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'maude-start-face t t)  '(4 'maude-end-face))
+         '(1 maude-start-face t t) '(2 maude-start-face t t)  '(4 maude-end-face))
    (list (concat maude-flk-debug (maude-flk-keyword "rew\\|rewrite") maude-flk-number-in-square maude-flk-in-module
                  maude-flk-term-possibly-two-lines maude-flk-end-command)
-         '(1 'maude-start-face prepend t) ; debug
-         '(2 'maude-start-face prepend t) ; rew
+         '(1 maude-start-face prepend t) ; debug
+         '(2 maude-start-face prepend t) ; rew
          '(3 font-lock-builtin-face prepend t) ; [10]
          '(5 font-lock-keyword-face prepend t) ; in
-         '(6 'maude-module-name-face prepend t)
-         '(7 'maude-end-face prepend t))
+         '(6 maude-module-name-face prepend t)
+         '(7 maude-end-face prepend t))
    (list (concat maude-flk-debug (maude-flk-keyword "frew\\|frewrite")
                  "\\(\\[[0-9, ]+\\]\\)?\\s-+" ; Note the regexp [10, 10]
                  maude-flk-in-module
                  maude-flk-term-possibly-two-lines maude-flk-end-command)
-         '(1 'maude-start-face prepend t) ; debug
-         '(2 'maude-start-face prepend t) ; rew
+         '(1 maude-start-face prepend t) ; debug
+         '(2 maude-start-face prepend t) ; rew
          '(3 font-lock-builtin-face prepend t) ; [10]
          '(5 font-lock-keyword-face prepend t) ; in
-         '(6 'maude-module-name-face prepend t)
-         '(7 'maude-end-face prepend t))
+         '(6 maude-module-name-face prepend t)
+         '(7 maude-end-face prepend t))
    (list (concat (maude-flk-keyword "x?match") maude-flk-number-in-square
                  maude-flk-in-module maude-flk-term "\\(<=\\?\\)" "\\(.+?\\)\\s-"
                  maude-flk-such-that-condition maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-builtin-face t t) '(4 font-lock-keyword-face t t) '(5 'maude-module-name-face t t)
-         '(7 'maude-start-face t t)      ; <=?
+         '(1 maude-start-face t t) '(2 font-lock-builtin-face t t) '(4 font-lock-keyword-face t t) '(5 maude-module-name-face t t)
+         '(7 maude-start-face t t)      ; <=?
          '(10 font-lock-keyword-face t t)                  ; such that
-         '(12 'maude-end-face t t))                         ; such that
+         '(12 maude-end-face t t))                         ; such that
    (list (concat "(?" (maude-flk-keyword "search") maude-flk-number-in-square
                  maude-flk-in-module maude-flk-term "\\(=>[!+*1]\\)" "\\(.+?\\)\\s-"
                  maude-flk-such-that-condition maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-builtin-face t t) '(4 font-lock-keyword-face t t) '(5 'maude-module-name-face t t)
-         '(7 'maude-start-face t t)                                ; =>
+         '(1 maude-start-face t t) '(2 font-lock-builtin-face t t) '(4 font-lock-keyword-face t t) '(5 maude-module-name-face t t)
+         '(7 maude-start-face t t)                                ; =>
          '(10 font-lock-keyword-face t t) ; such that
-         '(12 'maude-pattern-face t t)
-         '(12 'maude-end-face t t))
+         '(12 maude-pattern-face t t)
+         '(12 maude-end-face t t))
    (list (concat (maude-flk-keyword "continue\\|cont") "\\([1-9][0-9]\\)*\\s-+" maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-builtin-face t t) '(3 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-builtin-face t t) '(3 maude-end-face t t))
    (list (concat (maude-flk-keyword "loop") maude-flk-in-module maude-flk-term maude-flk-end-command)
-         '(1 'maude-start-face t t) '(3 font-lock-keyword-face t t) '(4 'maude-module-name-face t t) '(6 'maude-end-face t t))
+         '(1 maude-start-face t t) '(3 font-lock-keyword-face t t) '(4 maude-module-name-face t t) '(6 maude-end-face t t))
    (list (concat (maude-flk-keyword "trace") "\\<\\(select\\|deselect\\|include\\|exclude\\)\\>\\s-+" maude-flk-mod-exp maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(4 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(4 maude-end-face t t))
    (list (concat (maude-flk-keyword "print") "\\<\\(conceal\\|reveal\\)\\>\\s-+" maude-flk-mod-exp maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(4 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(4 maude-end-face t t))
    (list (concat (maude-flk-keyword "break") "\\<\\(select\\|deselect\\)\\>\\s-+" maude-flk-mod-exp maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(4 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(4 maude-end-face t t))
    (list (concat (maude-flk-keyword "show") maude-flk-term maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'default t t) '(3 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 'default t t) '(3 maude-end-face t t))
    (list (concat (maude-flk-keyword "show") (maude-flk-keyword "modules") maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 maude-end-face t t))
    (list (concat (maude-flk-keyword "show") (maude-flk-keyword "search\\s-+graph") maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 maude-end-face t t))
    (list (concat (maude-flk-keyword "show") (maude-flk-keyword "path") "\\([1-9][0-9]*\\)\\s-+" maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 font-lock-builtin-face t t) '(4 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 font-lock-builtin-face t t) '(4 maude-end-face t t))
    (list (concat (maude-flk-keyword "do") (maude-flk-keyword "clear\\s-+memo") maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 font-lock-keyword-face t t) '(3 maude-end-face t t))
    (list (concat (maude-flk-keyword "set") (maude-flk-keyword "show\\|print\\|trace\\|include") maude-flk-mod-exp maude-flk-on-off maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'maude-attribute-face t t) '(3 'maude-attribute-face t t) '(4 'maude-attribute-value-face t t) '(5 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 maude-attribute-face t t) '(3 maude-attribute-face t t) '(4 maude-attribute-value-face t t) '(5 maude-end-face t t))
    (list (concat (maude-flk-keyword "set") (maude-flk-keyword "break") maude-flk-on-off maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'maude-attribute-face t t) '(3 'maude-attribute-value-face t t) '(4 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 maude-attribute-face t t) '(3 maude-attribute-value-face t t) '(4 maude-end-face t t))
 ;;; DEBUGGER COMMANDS
    (list (concat (maude-flk-keyword "resume\\|abort\\|step\\|where") maude-flk-end-command)
-         '(1 'maude-start-face t t) '(2 'maude-end-face t t))
+         '(1 maude-start-face t t) '(2 maude-end-face t t))
 ;;; MODULE
    (list "(?\\(fmod\\|mod\\|view\\|fth\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
-         '(1 'maude-start-face prepend t)
-         '(2 'maude-module-name-face prepend t)
-         '(3 'maude-start-face prepend t))
+         '(1 maude-start-face prepend t)
+         '(2 maude-module-name-face prepend t)
+         '(3 maude-start-face prepend t))
    (list  "\\(endm\\|endfm\\|endv\\|endfth\\)"
-          '(1 'maude-start-face prepend t))
+          '(1 maude-start-face prepend t))
    (list (concat "\\<\\(\\<protecting\\|extending\\|including\\|ex\\|pr\\|inc\\)\\>\\s-+" maude-flk-mod-exp maude-flk-end)
-         '(1 font-lock-keyword-face append t) '(2 'maude-module-name-face prepend t)'(3 'maude-end-face))
+         '(1 font-lock-keyword-face append t) '(2 maude-module-name-face prepend t)'(3 maude-end-face))
 ;;; VIEW
    (list (concat (maude-flk-keyword "view") "\\(.*\\)\\s-+?"
                  (maude-flk-keyword "from") maude-flk-mod-exp
                  (maude-flk-keyword "to") maude-flk-mod-exp
                  (maude-flk-keyword "is"))
-         '(1 'maude-start-face prepend t) ; view
-         '(2 'maude-module-name-face prepend t)
-         '(3 'maude-start-face prepend t) ; from
-         '(4 'maude-module-name-face prepend t)
-         '(5 'maude-start-face prepend t) ; to
-         '(6 'maude-module-name-face prepend t)
-         '(7 'maude-start-face prepend t)) ; is
+         '(1 maude-start-face prepend t) ; view
+         '(2 maude-module-name-face prepend t)
+         '(3 maude-start-face prepend t) ; from
+         '(4 maude-module-name-face prepend t)
+         '(5 maude-start-face prepend t) ; to
+         '(6 maude-module-name-face prepend t)
+         '(7 maude-start-face prepend t)) ; is
    ;; endv handled above together with endm, endfm
 ;;; MODULE * TYPES
    (list (concat (maude-flk-keyword "sorts?") "\\(\\([a-zA-Z0-9(){},<>-]+\\s-+\\)+\\)" maude-flk-end) ; The double \\(\\) because font-lock only match once a line
          '(1 font-lock-keyword-face)
          '(2 font-lock-type-face prepend t)
-         '(4 'maude-end-face prepend t))
+         '(4 maude-end-face prepend t))
    ;; subsort.  Havent found good way to do this without colorizing the >s.
-   (list "\\(\\<subsorts?\\>\\)\\s-\\(.+\\)\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   (list "\\(\\<subsorts?\\>\\)[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 'maude-end-face prepend t))
-   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 'maude-end-face prepend t))
-   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 'maude-end-face prepend t))
-   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+<[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 'maude-end-face prepend t))
-   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+<[^<]+<[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 'maude-end-face prepend t))
+   (list "\\(\\<subsorts?\\>\\)\\s-\\(.+\\)\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   (list "\\(\\<subsorts?\\>\\)[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 maude-end-face prepend t))
+   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 maude-end-face prepend t))
+   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 maude-end-face prepend t))
+   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+<[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 maude-end-face prepend t))
+   (list "\\(\\<subsorts?\\>\\)[^<]+<[^<]+<[^<]+<[^<]+<[^<]+\\(<\\).+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'default prepend t) '(3 maude-end-face prepend t))
    ;; Hmm.  Doesnt work
    ;; 	 (list (concat "\\(subsorts?\\)\\s-+" maude-flk-type-name "\\(\\(<\\)\\s-+" maude-flk-type-name "\\)+" maude-flk-end)
-   ;; 				 '(1 'maude-module-name-face t t)
+   ;; 				 '(1 maude-module-name-face t t)
    ;; 				 '(2 'default append append)
-   ;; 				 '(3 'maude-element-face prepend t)
+   ;; 				 '(3 maude-element-face prepend t)
    ;; 				 '(4 definiendum-face append ())
-   ;; 				 '(5 'maude-element-face prepend t)
-   ;; 				 '(6 'maude-end-face prepend t))
+   ;; 				 '(5 maude-element-face prepend t)
+   ;; 				 '(6 maude-end-face prepend t))
    ;;  	 ;; subsorts.  Silly way to do this.  Anyone better?
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
-   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 'maude-element-face prepend t) '(3 'maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
+   ;;  	 (list "\\(\\<subsorts?\\>\\)\\s-+[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<\\([^<]+\\)\\s-+\\(\\.\\)" '(1 font-lock-keyword-face) '(2 maude-element-face prepend t) '(3 maude-end-face prepend t))
    ;; classs    ; could be made more effective?
    (list "\\<\\(\\<class\\)\\s-+\\(.+\\)|"
          '(2 font-lock-type-face prepend t))
@@ -507,28 +531,28 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(2 font-lock-function-name-face prepend t)
          '(3 font-lock-keyword-face prepend t) ; :
          '(6 font-lock-keyword-face prepend t) ; ->
-         '(9 'maude-end-face prepend t))
+         '(9 maude-end-face prepend t))
    ;; Attr
-   (list (maude-flk-attribute "assoc\\|associative") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute "comm\\|commutative") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute-colon-value "id" "[^]\n]*")       '(1 'maude-attribute-face prepend t) '(2 'maude-attribute-face t t))
+   (list (maude-flk-attribute "assoc\\|associative") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute "comm\\|commutative") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute-colon-value "id" "[^]\n]*")       '(1 maude-attribute-face prepend t) '(2 maude-attribute-face t t))
    (list (maude-flk-attribute-colon-value "\\(\\<left\\>\\|\\<right\\>\\)\\s-+id" "[^]\n]*") ; Need to be before the other attributes in the elisp code
-         '(1 'maude-attribute-face prepend t) '(2 'maude-attribute-face prepend t) '(3 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute "idem\\|idempotent") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute "iter\\|iterated") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute "memo") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute "ditto") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute-value "poly" "([ 0-9]+)")       '(1 'maude-attribute-face prepend t)      '(2 'maude-attribute-value-face prepend t))
-   (list (maude-flk-attribute-value "strat\\|strategy" "([ 0-9]+)")       '(1 'maude-attribute-face prepend t)      '(2 'maude-attribute-value-face prepend t))
-   (list (maude-flk-attribute-value "gather" "([ eE&]+)")       '(1 'maude-attribute-face prepend t)      '(2 'maude-attribute-value-face prepend t))
-   (list "\\[.*\\(\\<format\\)\\s-+\\(([^)]+)\\).*\\]"     '(1 'maude-attribute-face prepend t)        '(2 'maude-attribute-value-face prepend t))
-   (list (maude-flk-attribute-value "special" "(.+)")       '(1 'maude-attribute-face prepend t)      '(2 'maude-attribute-value-face prepend t))
+         '(1 maude-attribute-face prepend t) '(2 maude-attribute-face prepend t) '(3 maude-attribute-face prepend t))
+   (list (maude-flk-attribute "idem\\|idempotent") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute "iter\\|iterated") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute "memo") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute "ditto") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute-value "poly" "([ 0-9]+)")       '(1 maude-attribute-face prepend t)      '(2 maude-attribute-value-face prepend t))
+   (list (maude-flk-attribute-value "strat\\|strategy" "([ 0-9]+)")       '(1 maude-attribute-face prepend t)      '(2 maude-attribute-value-face prepend t))
+   (list (maude-flk-attribute-value "gather" "([ eE&]+)")       '(1 maude-attribute-face prepend t)      '(2 maude-attribute-value-face prepend t))
+   (list "\\[.*\\(\\<format\\)\\s-+\\(([^)]+)\\).*\\]"     '(1 maude-attribute-face prepend t)        '(2 maude-attribute-value-face prepend t))
+   (list (maude-flk-attribute-value "special" "(.+)")       '(1 maude-attribute-face prepend t)      '(2 maude-attribute-value-face prepend t))
    ;; StatementAttr elsewhere: nonexec, otherwise, metadata, label
-   (list (maude-flk-attribute-value "prec\\|precedence" "[0-9]+")   '(1 'maude-attribute-face prepend t)	 '(2 'maude-attribute-value-face prepend t))
-   ;; 	 (list "\\[.*\\(\\<id:\\)\\s-+\\(\\w+\\).*\\]"   '(1 'maude-attribute-face prepend t)   '(2 'maude-attribute-value-face prepend t))
-   (list (maude-flk-attribute "ctor\\|constructor") '(1 'maude-element-face prepend t))
-   (list (maude-flk-attribute "frozen") '(1 'maude-attribute-face prepend t))
-   (list (maude-flk-attribute-value "frozen" "([ 0-9]+)")       '(1 'maude-attribute-face prepend t)      '(2 'maude-attribute-value-face prepend t))
+   (list (maude-flk-attribute-value "prec\\|precedence" "[0-9]+")   '(1 maude-attribute-face prepend t)	 '(2 maude-attribute-value-face prepend t))
+   ;; 	 (list "\\[.*\\(\\<id:\\)\\s-+\\(\\w+\\).*\\]"   '(1 maude-attribute-face prepend t)   '(2 maude-attribute-value-face prepend t))
+   (list (maude-flk-attribute "ctor\\|constructor") '(1 maude-element-face prepend t))
+   (list (maude-flk-attribute "frozen") '(1 maude-attribute-face prepend t))
+   (list (maude-flk-attribute-value "frozen" "([ 0-9]+)")       '(1 maude-attribute-face prepend t)      '(2 maude-attribute-value-face prepend t))
 ;;; MODULE * VARIABLES
    (list (concat (maude-flk-keyword "vars?")
                  "\\(\\([0-9a-zA-Z@$'_,<>-]+\\s-+\\)*\\)"
@@ -536,62 +560,62 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(1 font-lock-keyword-face prepend t)
          '(2 font-lock-variable-name-face prepend t)
          '(4 font-lock-keyword-face prepend t)
-         '(6 'maude-end-face prepend t))
+         '(6 maude-end-face prepend t))
 ;;; MODULE * MEMBERSHIP
    (list (concat "\\<\\(mb\\)\\>\\s-+?" maude-flk-label maude-flk-pattern
                  "\\(:\\)\\s-+?" maude-flk-type-name maude-flk-end)
          '(1 font-lock-keyword-face prepend t) ; mb
-         '(3 'maude-label-face prepend t)       ; [label]
+         '(3 maude-label-face prepend t)       ; [label]
          '(4 font-lock-keyword-face prepend t) ; :
-         '(5 'maude-pattern-face prepend t)
+         '(5 maude-pattern-face prepend t)
          '(6 font-lock-keyword-face prepend t) ; :
-         '(7 'maude-element-face prepend t)
-         '(8 'maude-end-face prepend t))
+         '(7 maude-element-face prepend t)
+         '(8 maude-end-face prepend t))
    (list (concat "\\<\\(cmb\\)\\>\\s-+?" maude-flk-label maude-flk-pattern
                  "\\(:\\)\\s-+?" maude-flk-type-name
                  "\\(if\\)\\s-+" maude-flk-pattern maude-flk-end)
          '(1 font-lock-keyword-face prepend t) ;cmb
-         '(3 'maude-label-face prepend t)       ; [label]
+         '(3 maude-label-face prepend t)       ; [label]
          '(4 font-lock-keyword-face prepend t) ; :
-         '(5 'maude-pattern-face prepend t)
+         '(5 maude-pattern-face prepend t)
          '(6 font-lock-keyword-face prepend t) ; :
-         '(7 'maude-element-face prepend t)
+         '(7 maude-element-face prepend t)
          '(8 font-lock-keyword-face prepend t) ; if
-         '(9 'maude-pattern-face prepend t)
-         '(10 'maude-end-face prepend t))
+         '(9 maude-pattern-face prepend t)
+         '(10 maude-end-face prepend t))
 ;;; MODULE * EQUATIONS
    (list (concat "\\(\\<eq\\>\\)\\s-+?" maude-flk-label maude-flk-pattern
                  "\\(=\\)")
          '(1 font-lock-keyword-face prepend t) ; eq
-         '(3 'maude-label-face prepend t)       ; [label]
+         '(3 maude-label-face prepend t)       ; [label]
          '(4 font-lock-keyword-face prepend t) ; :
-         '(5 'maude-pattern-face prepend t)     ; pattern
+         '(5 maude-pattern-face prepend t)     ; pattern
          '(6 font-lock-keyword-face prepend t) ; =
          )
    (list (concat "\\<\\(ceq\\|cq\\)\\>\\s-+?" maude-flk-label maude-flk-pattern
                  "\\(=\\)\\s-+")
          '(1 font-lock-keyword-face prepend t)
-         '(3 'maude-label-face prepend t) ; [label]
+         '(3 maude-label-face prepend t) ; [label]
          '(4 font-lock-keyword-face prepend t) ; :
-         '(5 'maude-pattern-face prepend t)
+         '(5 maude-pattern-face prepend t)
          '(6 font-lock-keyword-face prepend t) ; =
          )
                                         ; Statement Attr (as opposed to attr)
    (list (maude-flk-attribute "nonexec")
-         '(1 'maude-attribute-face prepend t))
+         '(1 maude-attribute-face prepend t))
    (list (maude-flk-attribute "owise\\|otherwise")
-         '(1 'maude-attribute-face prepend t))
+         '(1 maude-attribute-face prepend t))
    (list (maude-flk-attribute-value "metadata" "\\w+")
-         '(1 'maude-attribute-face prepend t)
-         '(2 'maude-attribute-value-face prepend t))
+         '(1 maude-attribute-face prepend t)
+         '(2 maude-attribute-value-face prepend t))
    (list (maude-flk-attribute-value "label" "\\w+")
-         '(1 'maude-attribute-face prepend t)
-         '(2 'maude-attribute-value-face prepend t))
+         '(1 maude-attribute-face prepend t)
+         '(2 maude-attribute-value-face prepend t))
 ;;; MODULE * RULES
                                         ; rl [rule-name] : pattern => result .
    (list (concat "\\(\\<c?rl\\>\\)\\s-+?" maude-flk-label)
          '(1 font-lock-keyword-face) ; rl
-         '(3 'maude-label-face)       ; [label]
+         '(3 maude-label-face)       ; [label]
          '(4 font-lock-keyword-face) ; :
          )
     (list "\\s-\\(=>\\)\\s-"
@@ -600,34 +624,34 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;; FULL MAUDE
    ;; Don't have the full Maude grammar here, but try to include something
    (list "(\\(omod\\|fth\\|th\\|oth\\) \\(.+\\) \\(is\\)"
-         '(1 'maude-start-face prepend t)
-         '(2 'maude-module-name-face prepend t)
-         '(3 'maude-start-face prepend t))
+         '(1 maude-start-face prepend t)
+         '(2 maude-module-name-face prepend t)
+         '(3 maude-start-face prepend t))
    (list  "\\(endom\\|endfth\\|endth\\|endoth\\))"
-          '(1 'maude-start-face prepend t))
+          '(1 maude-start-face prepend t))
    (list (concat (maude-flk-keyword "sort\\|class") maude-flk-type-name
                  (maude-flk-keyword "to") maude-flk-type-name maude-flk-end)
          '(1 font-lock-keyword-face prepend t) ; sort
          '(2 font-lock-type-face prepend t)    ;
          '(3 font-lock-keyword-face prepend t) ; to
          '(4 font-lock-type-face prepend t)
-         '(5 'maude-end-face prepend t)) ; .
+         '(5 maude-end-face prepend t)) ; .
    (list (concat (maude-flk-keyword "op\\|msg") maude-flk-term
                  (maude-flk-keyword "to") maude-flk-term maude-flk-end)
          '(1 font-lock-keyword-face prepend t) ; op
          '(2 font-lock-function-name-face prepend t) ;
          '(3 font-lock-keyword-face prepend t)       ; to
          '(4 font-lock-function-name-face prepend t)
-         '(5 'maude-end-face prepend t)) ; .
+         '(5 maude-end-face prepend t)) ; .
    (list (concat (maude-flk-keyword "attr") maude-flk-name "\\(\\.\\)\\s-+" maude-flk-type-name
                  (maude-flk-keyword "to") maude-flk-name maude-flk-end)
          '(1 font-lock-keyword-face prepend t)                 ; attr
-         '(2 'maude-attribute-face prepend t)                         ;
+         '(2 maude-attribute-face prepend t)                         ;
          '(3 font-lock-keyword-face prepend t)                 ; .
          '(4 font-lock-type-face prepend t)
          '(5 font-lock-keyword-face prepend t) ; to
-         '(6 'maude-attribute-face prepend t)
-         '(7 'maude-end-face prepend t)) ; .
+         '(6 maude-attribute-face prepend t)
+         '(7 maude-end-face prepend t)) ; .
    ;; OTHER STUFF
    ;; if then else
    (list (concat (maude-flk-keyword "if") maude-flk-pattern
@@ -635,15 +659,15 @@ Use \\[describe-mode] in the process buffer for a list of commands."
                  "\\(" (maude-flk-keyword "else") maude-flk-pattern
                  "\\)?" (maude-flk-keyword "fi"))
          '(1 font-lock-keyword-face prepend t)
-         '(2 'maude-pattern-face prepend t)
+         '(2 maude-pattern-face prepend t)
          '(3 font-lock-keyword-face prepend t) ;then
          '(6 font-lock-keyword-face prepend t) ; else
          '(8 font-lock-keyword-face prepend t)) ; fi
    ;; if condition for ceq, crl
    (list (concat (maude-flk-keyword "if") maude-flk-pattern maude-flk-end)
          '(1 font-lock-keyword-face)
-         '(2 'maude-pattern-face)
-         '(3 'maude-end-face))
+         '(2 maude-pattern-face)
+         '(3 maude-end-face))
 ;;; WARNINGS
    ;;    Remove this if it causes too much confusion.  Ellef 2004-06-20
    (list maude-warnings '(1 font-lock-warning-face prepend t))
@@ -654,8 +678,8 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list "\\((\\*\\{3\\}.*\\*)\\)" '(1 font-lock-comment-face t t))
    (list "\\((\\*\\{3\\}.*\\)" '(1 font-lock-comment-face t t)) ; Poor-man multiline comments: Just the first and last line
    (list "\\(.*\\*)\\)" '(1 font-lock-comment-face t t)) ; End of multiline comment
-   (list "\\(\\*\\{4\\}.*\\)" '(1 'maude-comment-highlight-face t t)) ; Highlight ****
-   (list "\\(\\*\\{5\\}.*\\)" '(1 'maude-comment-highlight-highlight-face t t)) ; Highlight *****
+   (list "\\(\\*\\{4\\}.*\\)" '(1 maude-comment-highlight-face t t)) ; Highlight ****
+   (list "\\(\\*\\{5\\}.*\\)" '(1 maude-comment-highlight-highlight-face t t)) ; Highlight *****
    (list "\\(\\*\\*\\*\\s-*(\\)" '(1 font-lock-warning-face t t)) ; Dirty bug in maude 2.1.
                                         ; 	 (cons (concat "\\<\\("
                                         ; 								 (eval-when-compile

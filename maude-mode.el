@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-08-22 13:23:36 rudi>
+;; Time-stamp: <2007-08-24 16:19:09 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -378,7 +378,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    ;; punctuations : . ->    =    =>     <=    <      >    =/=
    ;;	 (cons "\:\\|\\.\\|\-\>\\|\~\>\\|\=\\|\=\>\\|\<\=\\|\<\\|\>\\|\\/" 'font-lock-keyword-face)
 ;;; SYSTEM COMMANDS
-   (list (concat (maude-flk-keyword "in") maude-flk-file-name "$")
+   (list (concat "^\\s-*" (maude-flk-keyword "in") maude-flk-file-name "$")
          '(1 maude-start-face t t) '(2 maude-file-face t t))
    (list (concat "^\\s-*\\<\\(quit\\|q\\|eof\\|popd\\|pwd\\)\\\\s-*$")
          '(1 maude-start-face t t))

@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-08-24 16:19:09 rudi>
+;; Time-stamp: <2007-08-26 16:23:02 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -713,22 +713,20 @@ Currently handles only monoline comments."
       ;; (if answer (message "Yes") (message "No")) ; Debugging
       answer)))
 
-;; (defun indent-line-function () " " (interactive) 
-;; 	(maude-indent-line))
 (defun maude-indent-line ()
   "Indent current line as maude code.  Use the variable `standard-indent'."
   (interactive)
   (let ((savep (> (current-column) (current-indentation)))
         (start-regexp "^\\s-*")
         (not-indented t)
-        (cur-indent 0)
+        (indentation 0)
         (start-line (current-line))
         (seen-object-end nil))
     (save-excursion
       (beginning-of-line)
       (save-excursion
         ;; Go back one char at a time, stopping when not not-indented.
-        ;; cur-indent is how many steps to indent
+        ;; `indentation' is how many steps to indent
         (while not-indented
           (when (eolp)
             (goto-char (or (maude-start-of-comment) (point))))
@@ -736,39 +734,39 @@ Currently handles only monoline comments."
            ((<= (point) 1) (setq not-indented nil))
            ((or (looking-at (concat start-regexp "(?[fo]?mod\\>"))
                 (looking-at (concat start-regexp "^(")))
-            (incf cur-indent standard-indent)
+            (incf indentation standard-indent)
             (setq not-indented nil))
            ((looking-at (concat start-regexp "end"))
-            (incf cur-indent 0)
+            (incf indentation 0)
             (setq not-indented nil))
            ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\>"))
                 (looking-at (concat start-regexp "\\<\\(var\\|op\\|sort\\|subsort\\)s?\\>"))
                 (looking-at (concat start-regexp "\\<\\(protecting\\|pr\\|extending\\|ex\\|including\\|inc\\)\\>")))
-            (incf cur-indent (* 2 standard-indent))
+            (incf indentation (* 2 standard-indent))
             (setq not-indented nil))
            ;; Maude's object-based notation: align attributes after |
            ;; if we did not pass something looking like an object end.
-           ;; This is something of a hack.
+           ;; This is a bit hackish.
            ((looking-at " >")
             (setq seen-object-end t))
            ((and (< (current-line) start-line)
                  (not seen-object-end)
                  (looking-at "< .+ : .+ |[^>]*$"))
-            (setq cur-indent (save-excursion (1+ (progn (search-forward "|")
-                                                        (current-column)))))
+            (incf indentation (save-excursion (1+ (progn (search-forward "|")
+                                                         (current-column)))))
             (setq not-indented nil))
            ((or (looking-at "\\s(")
                 (looking-at "\\<if\\>"))
-            (incf cur-indent 2))
+            (incf indentation 2))
            ((or (looking-at "\\s)")
                 (looking-at "\\<fi\\>"))
-            (decf cur-indent 2))
+            (decf indentation 2))
            ((or (looking-at  "\\s-\\.\\s-*?$")
                 (looking-at  "\\s-\\.\\s-+\\*\\*\\*"))
-            (decf cur-indent standard-indent)))
+            (decf indentation standard-indent)))
           (if not-indented (forward-char -1)))) ; eof save-excursion
       ;; (message "512 after while")
-      ;; (print cur-indent)
+      ;; (print indentation)
       (save-excursion
         ;; (message "513")
         (beginning-of-line)
@@ -777,24 +775,24 @@ Currently handles only monoline comments."
          ((or (looking-at (concat start-regexp "="))
               (looking-at (concat start-regexp "\\<\\(if\\|then\\|else\\|fi\\)\\s-"))
               (looking-at (concat start-regexp "to\\s-"))) ; Full Maude views
-          (incf cur-indent -2))
+          (decf indentation 2))
          ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\s-"))
               (looking-at (concat start-regexp "\\<\\(including\\|extending\\|protecting\\)\\s-"))
               (looking-at (concat start-regexp "\\<\\(inc\\|ext\\|pr\\)\\s-"))
               (looking-at (concat start-regexp "\\<c?\\(var\\|op\\|sort\\|subsort\\)s?\\s-")))
-          (setq cur-indent standard-indent))
+          (setq indentation standard-indent))
          ((or  (looking-at (concat start-regexp "\\<\\(in\\|load\\)\\s-"))
                (looking-at (concat start-regexp "(?\\([fo]?mod\\)\\s-"))
                ;; (looking-at (concat start-regexp "\\<\\(end[fo]?m\\))?\\s-"))
                (looking-at (concat start-regexp "\\<\\(end\\)"))
                (looking-at (concat start-regexp "(?\\<\\(search\\|red\\|reduce\\|rew\\|rewrite\\|trace\\|x?match\\)\\s-")))
-          (setq cur-indent 0)))))
+          (setq indentation 0)))))
     ;;     (if (looking-at "^\\s-*$") (insert-string "...."))
-    ;;     (print cur-indent)
+    ;;     (print indentation)
     ;;     (insert-string "X") ; See delete-char 1 down
     (if savep
-        (save-excursion (indent-line-to (max 0 cur-indent)))
-      (indent-line-to (max 0 cur-indent))))
+        (save-excursion (indent-line-to (max 0 indentation)))
+      (indent-line-to (max 0 indentation))))
   ;; (delete-char 1) ; Delete the X.  This is so we can indent empty lines
   (cond ((looking-at "^$") ; Ugly hack to fix indent in empty lines.  Doesnt work well between modules.
          (insert-string (make-string standard-indent ? ))))
@@ -807,7 +805,7 @@ Currently handles only monoline comments."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar maude-imenu-generic-expression
   '((nil
-     "^[:blank:]*(?[:blank:]*\\(?:[fo]?mod\\|f?th\\|view\\)[:blank:]+\\(\\C-+\\)"
+     "^[[:blank:]]*(?[[:blank:]]*\\(?:[fo]?mod\\|f?th\\|view\\)[[:blank:]]+\\([^[:space:]]+\\)"
      1))
   "Module definitions for `imenu'.")
 

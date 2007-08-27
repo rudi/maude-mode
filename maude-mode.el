@@ -30,8 +30,6 @@
 
 ;; Todo:
 ;; Full Maude (and parametrised modules)
-;; ansi-color.el to use format
-;; Doesnt know wheter run-maude work at the moment.
 
 ;; stuff we need
 (require 'font-lock)

@@ -139,6 +139,14 @@ This is intended to go into `comint-preoutput-filter-functions'."
     (maude-send-region start end)
     (setq maude-last-source-buffer (current-buffer))))
 
+(defun maude-send-definition ()
+  "Send the current definition to the MAUDE process."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (mark-defun nil)
+    (maude-send-region (point) (mark))))
+
 (defun maude-send-buffer ()
   "Send the buffer contents to the MAUDE process."
   (interactive)
@@ -994,6 +1002,7 @@ Currently handles only monoline comments."
   (setq font-lock-defaults '(maude-font-lock-keywords))
   (define-key maude-mode-map (kbd "C-c C-c") 'maude-send-paragraph)
   (define-key maude-mode-map (kbd "C-c C-r") 'maude-send-region)
+  (define-key maude-mode-map (kbd "C-M-x") 'maude-send-definition)
   (define-key maude-mode-map (kbd "C-c C-b") 'maude-send-buffer)
   (define-key maude-mode-map (kbd "C-c C-z") 'maude-switch-to-inferior-maude)
   ;; Set up comments -- make M-; work
@@ -1027,6 +1036,7 @@ Currently handles only monoline comments."
                  mark-active            ; emacs
                (region-exists-p)        ; xemacs
                )]
+    ["Evaluate definition" maude-send-definition t]
     ["---" nil nil]
     ["Run Maude" run-maude t]
     ["Switch to Maude" maude-switch-to-inferior-maude t]))

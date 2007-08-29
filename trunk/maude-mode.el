@@ -797,6 +797,27 @@ Currently handles only monoline comments."
   (if (looking-at "^\\s-*$") (end-of-line)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Buffer movement
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun maude-beginning-of-defun ()
+  "Move point to the beginning of the current definition or buffer."
+  ;; TODO: handle commands (in, load, ...)
+  (let ((start-regexp "^[[:blank:]]*(?[[:blank:]]*\\(?:[fo]?mod\\|f?th\\|view\\)[[:blank:]]+"))
+    (when (and (not (bobp)) (looking-at start-regexp))
+      ;; Already at module beginning: move backwards to next beginning
+      (backward-char 1))
+    (beginning-of-line)
+    (while (and (not (bobp))
+		(not (looking-at start-regexp)))
+      (forward-line -1))))
+
+(defun maude-end-of-defun ()
+  "Move point to the end of the current definition or buffer."
+  (re-search-forward
+   "^[[:blank:]]*end\\(?:f\\(?:m\\|th\\)\\|om\\|th\\|[mv]\\))?" nil :stay))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; imenu
 ;;;;; Turn this on with `imenu-add-menubar-index' (can be done by
 ;;;;; customizing `maude-mode-hook')
@@ -982,6 +1003,10 @@ Currently handles only monoline comments."
   (set (make-local-variable 'comment-end) "")
   ;; Indentation
   (set (make-local-variable 'indent-line-function) 'maude-indent-line)
+  ;; Movement
+  (set (make-local-variable 'beginning-of-defun-function)
+       'maude-beginning-of-defun)
+  (set (make-local-variable 'end-of-defun-function) 'maude-end-of-defun)
   ;; Abbrevs
   (setq local-abbrev-table maude-mode-abbrev-table)
   ;; Menu

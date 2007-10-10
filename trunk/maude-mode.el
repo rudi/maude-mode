@@ -757,7 +757,7 @@ Currently handles only monoline comments."
             (setq seen-object-end t))
            ((and (< (current-line) start-line)
                  (not seen-object-end)
-                 (looking-at "< .+ : .+ |[^>]*$"))
+                 (looking-at "< .+ : .+ |"))
             (incf indentation (save-excursion (1+ (progn (search-forward "|")
                                                          (current-column)))))
             (setq not-indented nil))

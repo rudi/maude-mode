@@ -253,7 +253,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
           "\\|\\<op\\>\\s-+\\w+\\s-+\\w+.*:" ; op, not ops
           "\\|\\<vars?\\>.*?,"               ; vars foo , bar
           "\\|\\<sorts?\\>.*?,"              ; sorts foo , bar
-          "\\|\\<ops?\\>[^:$t(]*?," ; ops foo , bar  The reason for the t is mappings in full maude: op identity to vector(0,0) .
+          "\\|\\<ops?\\>[^:$_t(]*?," ; ops foo , bar  The reason for the t is mappings in full maude: op identity to vector(0,0) .
           "\\|\\<prec\\w*\\>\\s-*9[6-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*1[1-3][0-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*[2-9][0-9][0-9]" ; Illegal high precedences?

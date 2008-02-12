@@ -154,7 +154,9 @@ This is intended to go into `comint-preoutput-filter-functions'."
       (progn
         (comint-check-source (buffer-file-name))
         (comint-send-string inferior-maude-buffer
-                            (concat "in " (buffer-file-name) "\n")))
+                            (concat "in "
+                                    (shell-quote-argument (buffer-file-name))
+                                    "\n")))
     (message "No Maude process started.  M-x run-maude."))
   (setq maude-last-source-buffer (current-buffer)))
 

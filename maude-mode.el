@@ -5,7 +5,7 @@
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
-;; Time-stamp: <2007-08-26 16:23:02 rudi>
+;; Time-stamp: <2008-04-23 16:20:55 rudi>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -40,6 +40,7 @@
 (require 'derived)
 (require 'easymenu)
 (require 'imenu)
+(eval-when-compile (require 'cl))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defgroup maude nil
@@ -347,25 +348,24 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;; Temporary variables for maude-font-lock-regexp.  
 ;; However, didnt find elegant way of setting them local (with let or something)
 ;; These regexps match the space after them.
-(setq maude-flk-label "\\(\\(\\[.+?\\]\\)\\s-+?\\(:\\)\\s-+?\\)?" ; [label]
-      maude-flk-pattern "\\(.*?\\)\\s-+?"              ; pattern term
-      maude-flk-term "\\(.+\\)\\s-+"                   ; term
-      maude-flk-name "\\(\\w+\\)\\s-+" ; General name.  Try to use sth else
-      maude-flk-type-name "\\([a-zA-Z0-9()|{},<>$-]+@?[a-zA-Z0-9()|{},<>$-]*\\s-+\\)" ; sort name.  May contain @{}-,<>$ and several ()
-      ;; maude-flk-module "\\(\\w\\S-*\\s-+\\)" ; module name	
-      maude-flk-mod-id "\\(\\w\\S-*\\s-+\\)" ; module name	
-      maude-flk-mod-exp "\\(\\w.*?\\)\\s-+" ; module expression.  May be parametrised module, M*N, M+N, (M)
-      maude-flk-end "\\s-?\\(\\.\\)\\s-"         ; end of command. XXX make whitespace mandatory once this isn't used in other expressions
-      maude-flk-end-command "\\(\\.\\))?\\s-" ; end of command.  ) for Full Maude
-      maude-flk-number-in-square "\\(\\[[0-9]+\\]\\s-+\\)?" ; [10]
-      maude-flk-in-module "\\(\\(\\<in\\>\\)\\s-+\\(\\w+\\)\\s-+\\)?" ; in FOO : 
-      maude-flk-term-possibly-two-lines  ".*?\\s-*?.*?\\s-*?"
-      maude-flk-debug "\\(\\<debug\\>\\s-+\\)?"
-      maude-flk-such-that-condition "\\(\\(\\<such\\s-+that\\>\\|\\<s\\.t\\.\\)\\s-+\\(.+\\)\\s-\\)?"
-      maude-flk-file-name "\\(\\S-+\\)\\s-*"
-      maude-flk-directory "\\(\\w\\S-*\\)\\s-*"
-      maude-flk-on-off "\\<\\(on\\|off\\)\\>\\s-+"
-      )
+(defvar maude-flk-label "\\(\\(\\[.+?\\]\\)\\s-+?\\(:\\)\\s-+?\\)?") ; [label]
+(defvar maude-flk-pattern "\\(.*?\\)\\s-+?")              ; pattern term
+(defvar maude-flk-term "\\(.+\\)\\s-+")                   ; term
+(defvar maude-flk-name "\\(\\w+\\)\\s-+") ; General name.  Try to use sth else
+(defvar maude-flk-type-name "\\([a-zA-Z0-9()|{},<>$-]+@?[a-zA-Z0-9()|{},<>$-]*\\s-+\\)") ; sort name.  May contain @{}-,<>$ and several ()
+      ;; (defvar maude-flk-module "\\(\\w\\S-*\\s-+\\)") ; module name	
+(defvar maude-flk-mod-id "\\(\\w\\S-*\\s-+\\)") ; module name	
+(defvar maude-flk-mod-exp "\\(\\w.*?\\)\\s-+") ; module expression.  May be parametrised module, M*N, M+N, (M)
+(defvar maude-flk-end "\\s-?\\(\\.\\)\\s-")         ; end of command. XXX make whitespace mandatory once this isn't used in other expressions
+(defvar maude-flk-end-command "\\(\\.\\))?\\s-") ; end of command.  ) for Full Maude
+(defvar maude-flk-number-in-square "\\(\\[[0-9]+\\]\\s-+\\)?") ; [10]
+(defvar maude-flk-in-module "\\(\\(\\<in\\>\\)\\s-+\\(\\w+\\)\\s-+\\)?") ; in FOO : 
+(defvar maude-flk-term-possibly-two-lines  ".*?\\s-*?.*?\\s-*?")
+(defvar maude-flk-debug "\\(\\<debug\\>\\s-+\\)?")
+(defvar maude-flk-such-that-condition "\\(\\(\\<such\\s-+that\\>\\|\\<s\\.t\\.\\)\\s-+\\(.+\\)\\s-\\)?")
+(defvar maude-flk-file-name "\\(\\S-+\\)\\s-*")
+(defvar maude-flk-directory "\\(\\w\\S-*\\)\\s-*")
+(defvar maude-flk-on-off "\\<\\(on\\|off\\)\\>\\s-+")
 
 (defun maude-flk-keyword (keyword)
   (concat "\\(\\<" keyword "\\>\\)\\s-+?"))
@@ -800,15 +800,15 @@ Currently handles only monoline comments."
                (looking-at (concat start-regexp "\\<\\(end\\)"))
                (looking-at (concat start-regexp "(?\\<\\(search\\|red\\|reduce\\|rew\\|rewrite\\|trace\\|x?match\\)\\s-")))
           (setq indentation 0)))))
-    ;;     (if (looking-at "^\\s-*$") (insert-string "...."))
+    ;;     (if (looking-at "^\\s-*$") (insert "...."))
     ;;     (print indentation)
-    ;;     (insert-string "X") ; See delete-char 1 down
+    ;;     (insert "X") ; See delete-char 1 down
     (if savep
         (save-excursion (indent-line-to (max 0 indentation)))
       (indent-line-to (max 0 indentation))))
   ;; (delete-char 1) ; Delete the X.  This is so we can indent empty lines
   (cond ((looking-at "^$") ; Ugly hack to fix indent in empty lines.  Doesnt work well between modules.
-         (insert-string (make-string standard-indent ? ))))
+         (insert (make-string standard-indent ? ))))
   (if (looking-at "^\\s-*$") (end-of-line)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

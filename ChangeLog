@@ -1,3 +1,8 @@
+2008-04-23  Rudi Schlatte  <rudi@constantly.at>
+
+	* maude-mode.el (maude-current-line): Function added.
+	(maude-indent-line): Use it.
+
 2007-07-11  Rudi Schlatte  <rudi@constantly.at>
 
 	* maude-mode.el (maude-start-of-comment): renamed from

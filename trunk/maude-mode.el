@@ -703,6 +703,11 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;;;; Automatic indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun maude-current-line ()
+  "Return the vertical position of point.  Every mode seems to define this."
+  (+ (count-lines (window-start) (point))
+     (if (= (current-column) 0) 1 0)))
+
 (defun maude-start-of-comment ()
   "Return start of comment if point is in a comment, nil otherwise.
 Currently handles only monoline comments."
@@ -728,7 +733,7 @@ Currently handles only monoline comments."
         (start-regexp "^\\s-*")
         (not-indented t)
         (indentation 0)
-        (start-line (current-line))
+        (start-line (maude-current-line))
         (seen-object-end nil))
     (save-excursion
       (beginning-of-line)
@@ -757,7 +762,7 @@ Currently handles only monoline comments."
            ;; This is a bit hackish.
            ((looking-at " >")
             (setq seen-object-end t))
-           ((and (< (current-line) start-line)
+           ((and (< (maude-current-line) start-line)
                  (not seen-object-end)
                  (looking-at "< .+ : .+ |"))
             (incf indentation (save-excursion (1+ (progn (search-forward "|")

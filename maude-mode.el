@@ -161,6 +161,15 @@ This is intended to go into `comint-preoutput-filter-functions'."
     (message "No Maude process started.  M-x run-maude."))
   (setq maude-last-source-buffer (current-buffer)))
 
+(defun maude-next-action ()
+  "Send buffer or active region to Maude, starting it if necessary."
+  (interactive)
+  (if (not (buffer-live-p inferior-maude-buffer))
+      (save-excursion (run-maude)))
+  (if (use-region-p)
+      (maude-send-region (region-beginning) (region-end))
+    (maude-send-buffer)))
+
 (defun maude-switch-to-inferior-maude ()
   "Switch to the inferior maude buffer.
 If Maude is not running, starts an inferior Maude process."
@@ -1007,7 +1016,7 @@ Currently handles only monoline comments."
   :group 'maude
   :syntax-table maude-mode-syntax-table
   (setq font-lock-defaults '(maude-font-lock-keywords))
-  (define-key maude-mode-map (kbd "C-c C-c") 'maude-send-paragraph)
+  (define-key maude-mode-map (kbd "C-c C-c") 'maude-next-action)
   (define-key maude-mode-map (kbd "C-c C-r") 'maude-send-region)
   (define-key maude-mode-map (kbd "C-M-x") 'maude-send-definition)
   (define-key maude-mode-map (kbd "C-c C-b") 'maude-send-buffer)

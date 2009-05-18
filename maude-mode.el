@@ -58,6 +58,11 @@
   :options (list 'imenu-add-menubar-index)
   :group 'maude)
 
+(defcustom maude-indent standard-indent
+  "The amount of indentation to use."
+  :type 'integer
+  :group 'maude)
+
 (defcustom inferior-maude-mode-hook nil
   "Hook for customizing `inferior-maude-mode'."
   :type 'hook
@@ -736,7 +741,7 @@ Currently handles only monoline comments."
       answer)))
 
 (defun maude-indent-line ()
-  "Indent current line as maude code.  Use the variable `standard-indent'."
+  "Indent current line as maude code.  Use the variable `maude-indent'."
   (interactive)
   (let ((savep (> (current-column) (current-indentation)))
         (start-regexp "^\\s-*")
@@ -756,7 +761,7 @@ Currently handles only monoline comments."
            ((<= (point) 1) (setq not-indented nil))
            ((or (looking-at (concat start-regexp "(?[fo]?mod\\>"))
                 (looking-at (concat start-regexp "^(")))
-            (incf indentation standard-indent)
+            (incf indentation maude-indent)
             (setq not-indented nil))
            ((looking-at (concat start-regexp "end"))
             (incf indentation 0)
@@ -764,7 +769,7 @@ Currently handles only monoline comments."
            ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\>"))
                 (looking-at (concat start-regexp "\\<\\(var\\|op\\|sort\\|subsort\\)s?\\>"))
                 (looking-at (concat start-regexp "\\<\\(protecting\\|pr\\|extending\\|ex\\|including\\|inc\\)\\>")))
-            (incf indentation (* 2 standard-indent))
+            (incf indentation (* 2 maude-indent))
             (setq not-indented nil))
            ;; Maude's object-based notation: align attributes after |
            ;; if we did not pass something looking like an object end.
@@ -785,7 +790,7 @@ Currently handles only monoline comments."
             (decf indentation 2))
            ((or (looking-at  "\\s-\\.\\s-*?$")
                 (looking-at  "\\s-\\.\\s-+\\*\\*\\*"))
-            (decf indentation standard-indent)))
+            (decf indentation maude-indent)))
           (if not-indented (forward-char -1)))) ; eof save-excursion
       ;; (message "512 after while")
       ;; (print indentation)
@@ -802,7 +807,7 @@ Currently handles only monoline comments."
               (looking-at (concat start-regexp "\\<\\(including\\|extending\\|protecting\\)\\s-"))
               (looking-at (concat start-regexp "\\<\\(inc\\|ext\\|pr\\)\\s-"))
               (looking-at (concat start-regexp "\\<c?\\(var\\|op\\|sort\\|subsort\\)s?\\s-")))
-          (setq indentation standard-indent))
+          (setq indentation maude-indent))
          ((or  (looking-at (concat start-regexp "\\<\\(in\\|load\\)\\s-"))
                (looking-at (concat start-regexp "(?\\([fo]?mod\\)\\s-"))
                ;; (looking-at (concat start-regexp "\\<\\(end[fo]?m\\))?\\s-"))
@@ -817,7 +822,7 @@ Currently handles only monoline comments."
       (indent-line-to (max 0 indentation))))
   ;; (delete-char 1) ; Delete the X.  This is so we can indent empty lines
   (cond ((looking-at "^$") ; Ugly hack to fix indent in empty lines.  Doesnt work well between modules.
-         (insert (make-string standard-indent ? ))))
+         (insert (make-string maude-indent ? ))))
   (if (looking-at "^\\s-*$") (end-of-line)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

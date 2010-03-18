@@ -29,7 +29,13 @@
 ;; http://two-wugs.net/emacs/mode-tutorial.html
 
 ;; Todo:
-;; Full Maude (and parametrised modules)
+;;
+;; - Full Maude (and parametrised modules)
+;; 
+;; - C-u C-c C-c to move point to end of inferior-maude buffer before
+;;   evaluating buffer.
+;;
+;; - Sometimes font-lock gets into an endless loop
 
 ;; stuff we need
 (require 'font-lock)

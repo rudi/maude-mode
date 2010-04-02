@@ -56,6 +56,7 @@
 (defcustom maude-command "/usr/local/bin/maude"
   "Path to the maude executable.  Use \\[run-maude] to run maude."
   :type 'file
+  :safe 'stringp
   :group 'maude)
 
 (defcustom maude-mode-hook (list 'imenu-add-menubar-index)
@@ -67,6 +68,7 @@
 (defcustom maude-indent standard-indent
   "The amount of indentation to use."
   :type 'integer
+  :safe 'integerp
   :group 'maude)
 
 (defcustom inferior-maude-mode-hook nil

@@ -174,6 +174,11 @@ This is intended to go into `comint-preoutput-filter-functions'."
     (message "No Maude process started.  M-x run-maude."))
   (setq maude-last-source-buffer (current-buffer)))
 
+(defun maude-use-region-p ()
+  (if (fboundp 'use-region-p)
+      (use-region-p)
+    (region-active-p)))
+
 (defun maude-next-action ()
   "Send buffer or active region to Maude, starting it if necessary."
   (interactive)

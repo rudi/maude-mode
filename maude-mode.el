@@ -184,7 +184,7 @@ This is intended to go into `comint-preoutput-filter-functions'."
   (interactive)
   (if (not (buffer-live-p inferior-maude-buffer))
       (save-excursion (run-maude)))
-  (if (use-region-p)
+  (if (maude-use-region-p)
       (maude-send-region (region-beginning) (region-end))
     (maude-send-buffer)))
 

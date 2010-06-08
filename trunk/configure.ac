@@ -19,7 +19,7 @@ dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 dnl 02111-1307, USA.
 
-AC_INIT([Maude Mode], 1.0, [rudi@users.sourceforge.net], [maude-mode])
+AC_INIT([Maude Mode], 0.2, [rudi@users.sourceforge.net], [maude-mode])
 AC_PREREQ([2.59])
 AC_CONFIG_SRCDIR([maude-mode.el])
 AM_INIT_AUTOMAKE([1.9])

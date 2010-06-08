@@ -1,3 +1,10 @@
+2010-06-08  Rudolf Schlatte  <rudi@constantly.at>
+
+	* Release v0.2
+
+	* Also realize that ChangeLog hasn't been kept up-to-date for the
+	last 2 years :(
+
 2008-04-23  Rudi Schlatte  <rudi@constantly.at>
 
 	* maude-mode.el (maude-current-line): Function added.

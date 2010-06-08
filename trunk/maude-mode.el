@@ -59,6 +59,11 @@
   :group 'maude)
 (put 'maude-command 'safe-local-variable 'stringp)
 
+(defcustom maude-command-options (list "-ansi-color")
+  "Options when starting Maude."
+  :type '(repeat string)
+  :group 'maude)
+
 (defcustom maude-mode-hook (list 'imenu-add-menubar-index)
   "Hook for customizing `maude-mode'."
   :type 'hook
@@ -175,9 +180,9 @@ This is intended to go into `comint-preoutput-filter-functions'."
   (setq maude-last-source-buffer (current-buffer)))
 
 (defun maude-use-region-p ()
-  (if (fboundp 'use-region-p)
-      (use-region-p)
-    (region-active-p)))
+  (cond ((fboundp 'use-region-p) (use-region-p))
+        ((fboundp 'region-active-p) (region-active-p))
+        (t nil)))
 
 (defun maude-next-action ()
   "Send buffer or active region to Maude, starting it if necessary."
@@ -216,7 +221,7 @@ Use \\[describe-mode] in the process buffer for a list of commands."
     (when (buffer-live-p inferior-maude-buffer)
       (kill-buffer inferior-maude-buffer))
     (setq inferior-maude-buffer
-          (make-comint "Maude" maude-command nil "-ansi-color"))
+          (apply 'make-comint "Maude" maude-command nil maude-command-options))
     (pop-to-buffer inferior-maude-buffer)
     (inferior-maude-mode)
     (ansi-color-for-comint-mode-on)

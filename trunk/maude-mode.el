@@ -57,7 +57,6 @@
   "Path to the maude executable.  Use \\[run-maude] to run maude."
   :type 'file
   :group 'maude)
-(put 'maude-command 'safe-local-variable 'stringp)
 
 (defcustom maude-command-options (list "-ansi-color")
   "Options when starting Maude."

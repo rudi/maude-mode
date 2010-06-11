@@ -46,6 +46,8 @@
 (require 'derived)
 (require 'easymenu)
 (require 'imenu)
+(require 'newcomment)
+(require 'rx)
 (eval-when-compile (require 'cl))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -353,21 +355,6 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   :group 'maude)
 (defvar maude-file-face 'maude-file-face
   "Face on files and directories")
-
-(defface maude-comment-highlight-face
-  '((t (:inherit font-lock-comment-face :weight bold)))
-  "Face on 'comment headlines' with four asterisks"
-  :group 'maude)
-(defvar maude-comment-highlight-face 'maude-comment-highlight-face
-  "Face on 'comment headlines' with four asterisks")
-
-(defface maude-comment-highlight-highlight-face
-  '((t (:inherit maude-comment-highlight-face :inverse-video t)))
-  "Face on important 'comment headlines' with five asterisks"
-  :group 'maude)
-(defvar maude-comment-highlight-highlight-face
-  'maude-comment-highlight-highlight-face
-  "Face on important 'comment headlines' with five asterisks")
 
 (defface maude-end-face
   '((t (:inherit bold)))
@@ -710,23 +697,8 @@ Use \\[describe-mode] in the process buffer for a list of commands."
 ;;; WARNINGS
    ;;    Remove this if it causes too much confusion.  Ellef 2004-06-20
    (list maude-warnings '(1 font-lock-warning-face prepend t))
-   (list "\\(\\.\\)\\s-*$" '(1 'bold append t)) ;; To be removed
-   (list "\\(\\.\\)\\s-*\\*\\*\\*" '(1 'bold append t)) ;; To be removed
    ;; COMMENTS
-   (list "\\([-*]\\{3\\}.*$\\)" '(1 font-lock-comment-face t t))
-   (list "\\((\\*\\{3\\}.*\\*)\\)" '(1 font-lock-comment-face t t))
-   (list "\\((\\*\\{3\\}.*\\)" '(1 font-lock-comment-face t t)) ; Poor-man multiline comments: Just the first and last line
-   (list "\\(.*\\*)\\)" '(1 font-lock-comment-face t t)) ; End of multiline comment
-   (list "\\(\\*\\{4\\}.*\\)" '(1 maude-comment-highlight-face t t)) ; Highlight ****
-   (list "\\(\\*\\{5\\}.*\\)" '(1 maude-comment-highlight-highlight-face t t)) ; Highlight *****
-   (list "\\(\\*\\*\\*\\s-*(\\)" '(1 font-lock-warning-face t t)) ; Dirty bug in maude 2.1.
-                                        ; 	 (cons (concat "\\<\\("
-                                        ; 								 (eval-when-compile
-                                        ; 									 (regexp-opt '(":" "<" "." "->" "=")))
-                                        ; 								 "\\)\\>") 'font-lock-keyword-face)
-   ;; 	 (list "\\(\\*\\*\\*.*)\\)"                         ; The famous *** foo ) error in maude
-   ;; 				 '(1 font-lock-warning-face t t))
-   )
+   (list (rx (group (| "***" "---") (* nonl) eol)) '(1 font-lock-comment-face t)))
   "Subdued level highlighting for Maude mode.")
 
 
@@ -1037,7 +1009,6 @@ Currently handles only monoline comments."
   \\{maude-mode-map}"
   :group 'maude
   :syntax-table maude-mode-syntax-table
-  (setq font-lock-defaults '(maude-font-lock-keywords))
   (define-key maude-mode-map (kbd "C-c C-c") 'maude-next-action)
   (define-key maude-mode-map (kbd "C-c C-r") 'maude-send-region)
   (define-key maude-mode-map (kbd "C-M-x") 'maude-send-definition)
@@ -1048,6 +1019,7 @@ Currently handles only monoline comments."
   (set (make-local-variable 'comment-start-skip)
        "---+[ \t]*\\|\\*\\*\\*+[ \t]*")
   (set (make-local-variable 'comment-end) "")
+  (setq font-lock-defaults '(maude-font-lock-keywords))
   ;; Indentation
   (set (make-local-variable 'indent-line-function) 'maude-indent-line)
   ;; Movement

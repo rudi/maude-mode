@@ -180,6 +180,14 @@ This is intended to go into `comint-preoutput-filter-functions'."
     (message "No Maude process started.  M-x run-maude."))
   (setq maude-last-source-buffer (current-buffer)))
 
+(defun maude-send-file (filename)
+  (if (buffer-live-p inferior-maude-buffer)
+      (progn
+        (comint-check-source filename)
+        (comint-send-string inferior-maude-buffer
+                            (concat "in " filename "\n")))
+    (message "No Maude process started.  M-x run-maude.")))
+
 (defun maude-use-region-p ()
   (cond ((fboundp 'use-region-p) (use-region-p))
         ((fboundp 'region-active-p) (region-active-p))

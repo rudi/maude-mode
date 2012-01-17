@@ -55,7 +55,7 @@
   "Major mode for editing files in the programming language Maude."
   :group 'languages)
 
-(defcustom maude-command "/usr/local/bin/maude"
+(defcustom maude-command (executable-find "maude")
   "Path to the maude executable.  Use \\[run-maude] to run maude."
   :type 'file
   :group 'maude)

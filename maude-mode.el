@@ -1,8 +1,9 @@
-;;; maude-mode.el -- Emacs mode for the programming language Maude
+;;; maude-mode.el --- Emacs mode for the programming language Maude
 
 ;; Copyright (C) 2004, 2007  Free Software Foundation, Inc.
 
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
+;; Version: 0.2
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: Maude
 ;; Time-stamp: <2008-04-23 16:20:55 rudi>
@@ -961,6 +962,7 @@ Currently handles only monoline comments."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Claim ownership of `.maude' extension
+;;;###autoload
 (unless (assoc "\\.maude\\'" auto-mode-alist)
   (add-to-list 'auto-mode-alist '("\\.maude\\'" . maude-mode)))
 
@@ -993,6 +995,7 @@ Currently handles only monoline comments."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;###autoload
 (define-derived-mode maude-mode fundamental-mode "Maude"
   "Major mode for editing Maude files.
   Provides syntax highlighting.  
@@ -1060,3 +1063,5 @@ Currently handles only monoline comments."
     ["Switch to Maude" maude-switch-to-inferior-maude t]))
 
 (provide 'maude-mode)
+
+;;; maude-mode.el ends here

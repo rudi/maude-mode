@@ -298,8 +298,6 @@ Use \\[describe-mode] in the process buffer for a list of commands."
           "\\|\\<var\\>\\s-+\\w+\\s-+\\w+"  ; var, not vars
           "\\|\\<sort\\>\\s-+\\w+\\s-+[a-su-zA-Z][a-np-zA-Z]\\w*?" ; sort, not sorts.  Not sort Foo to Bar .
           "\\|\\<op\\>\\s-+\\w+\\s-+\\w+.*:" ; op, not ops
-          "\\|\\<vars?\\>.*?,"               ; vars foo , bar
-          "\\|\\<sorts?\\>.*?,"              ; sorts foo , bar
           "\\|\\<ops?\\>[^:$_t(]*?," ; ops foo , bar  The reason for the t is mappings in full maude: op identity to vector(0,0) .
           "\\|\\<prec\\w*\\>\\s-*9[6-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
           "\\|\\<prec\\w*\\>\\s-*1[1-3][0-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok

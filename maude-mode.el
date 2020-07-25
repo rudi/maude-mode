@@ -538,15 +538,16 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    ;; 	 (list "\\<subclasses\\>\\([^<]+\\)"
    ;; 				 '(2 font-lock-type-face prepend t))
 ;;; MODULE * OPERATORS
-   (list (concat (maude--flk-keyword "ops?") "\\(.*\\)\\s-"
-                 "\\(:\\)\\s-+\\(" maude--flk-type-name "\\)*"
-                 "\\([-~]>\\)\\s-+" maude--flk-type-name
-                 "\\(\\[[^]]*\\]\\s-+\\)?" maude--flk-end)
-         '(1 font-lock-keyword-face prepend t)
-         '(2 font-lock-function-name-face prepend t)
-         '(3 font-lock-keyword-face prepend t) ; :
-         '(6 font-lock-keyword-face prepend t) ; ->
-         '(9 maude-end-face prepend t))
+   ;; ;; This hangs
+   ;; (list (concat (maude--flk-keyword "ops?") "\\(.*\\)\\s-"
+   ;;               "\\(:\\)\\s-+\\(" maude--flk-type-name "\\)*"
+   ;;               "\\([-~]>\\)\\s-+" maude--flk-type-name
+   ;;               "\\(\\[[^]]*\\]\\s-+\\)?" maude--flk-end)
+   ;;       '(1 font-lock-keyword-face prepend t)
+   ;;       '(2 font-lock-function-name-face prepend t)
+   ;;       '(3 font-lock-keyword-face prepend t) ; :
+   ;;       '(6 font-lock-keyword-face prepend t) ; ->
+   ;;       '(9 maude-end-face prepend t))
    ;; Attr
    (list (maude--flk-attribute "assoc\\|associative") '(1 maude-attribute-face prepend t))
    (list (maude--flk-attribute "comm\\|commutative") '(1 maude-attribute-face prepend t))

@@ -52,12 +52,10 @@
 (require 'compile)
 (require 'derived)
 (require 'ansi-color)
-(require 'derived)
 (require 'easymenu)
 (require 'imenu)
 (require 'newcomment)
 (require 'rx)
-(eval-when-compile (require 'cl))
 
 (defgroup maude nil
   "Major mode for editing files in the programming language Maude."

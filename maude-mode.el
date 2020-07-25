@@ -282,31 +282,6 @@ Use \\[describe-mode] in the process buffer for a list of commands."
   "Maude keywords")
 
 
-(defconst maude-warnings
-  (concat "\\(\\<eof\\>"                ; eof
-          "\\|\\<quit\\>\\|^\\s-*?q\\>" ; quit
-          "\\|\\w\\.\\s-*?$"            ; text.
-          "\\|\\]\\."                   ; ].
-          "\\|)\\."                     ; ).
-          "\\|\\w->"                    ; text->
-          "\\|->\\w"                    ; ->text
-          "\\|\\w=>"                    ; text=>
-          "\\|=>\\w"                    ; =>text
-          "\\|var.*\\w:"                ; var text:
-          "\\|var.*:\\w"                ; var :text
-          "\\|\\<eq\\>.*\\s-=>\\s-"     ; eq foo => bar
-          "\\|\\<rl\\>.*\\s-=[ ][^\n][^\n]" ; rl foo = bar ; This doesn't work
-          "\\|\\<var\\>\\s-+\\w+\\s-+\\w+"  ; var, not vars
-          "\\|\\<sort\\>\\s-+\\w+\\s-+[a-su-zA-Z][a-np-zA-Z]\\w*?" ; sort, not sorts.  Not sort Foo to Bar .
-          "\\|\\<op\\>\\s-+\\w+\\s-+\\w+.*:" ; op, not ops
-          "\\|\\<ops?\\>[^:$_t(]*?," ; ops foo , bar  The reason for the t is mappings in full maude: op identity to vector(0,0) .
-          "\\|\\<prec\\w*\\>\\s-*9[6-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
-          "\\|\\<prec\\w*\\>\\s-*1[1-3][0-9]" ; I have no Idea why this caused error once.  Precedence < 95 ok
-          "\\|\\<prec\\w*\\>\\s-*[2-9][0-9][0-9]" ; Illegal high precedences?
-          "\\|^omod" ; Should have full maude here, with "(" before
-          "\\)")
-  "Regexps to be coloured with warning-face.")
-
 ;; Making faces
 (defface maude-attribute-face nil
   "attributes to operators (like comm and gather)"
@@ -704,9 +679,6 @@ Use \\[describe-mode] in the process buffer for a list of commands."
          '(1 font-lock-keyword-face)
          '(2 maude-pattern-face)
          '(3 maude-end-face))
-;;; WARNINGS
-   ;;    Remove this if it causes too much confusion.  Ellef 2004-06-20
-   (list maude-warnings '(1 font-lock-warning-face prepend t))
    ;; COMMENTS
    (list (rx (group (| "***" "---") (* nonl) eol)) '(1 font-lock-comment-face t)))
   "Subdued level highlighting for Maude mode.")

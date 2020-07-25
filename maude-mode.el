@@ -1,12 +1,13 @@
-;;; maude-mode.el --- Emacs mode for the programming language Maude
+;;; maude-mode.el --- Emacs mode for the programming language Maude -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2004, 2007  Free Software Foundation, Inc.
 
 ;; Author: Ellef Gjelstad <ellefg+maude*ifi.uio.no>
-;; Version: 0.2
 ;; Maintainer: Rudi Schlatte <rudi@constantly.at>
-;; Keywords: Maude
-;; Time-stamp: <2008-04-23 16:20:55 rudi>
+;; URL: https://github.com/rudi/abs-mode
+;; Package-Requires: ((emacs "25"))
+;; Version: 0.2
+;; Keywords: Languages maude
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

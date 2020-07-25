@@ -996,7 +996,7 @@ Currently handles only monoline comments."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;###autoload
-(define-derived-mode maude-mode fundamental-mode "Maude"
+(define-derived-mode maude-mode prog-mode "Maude"
   "Major mode for editing Maude files.
   Provides syntax highlighting.  
   \\[maude-indent-line] indents current line.

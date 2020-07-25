@@ -847,7 +847,7 @@ Currently handles only monoline comments."
     (end-of-line)         ; re-search-backward only search up to point
     (while (re-search-backward "\\]\\(.*\\)\\]" (line-beginning-position) t)
       (replace-match " \\1]" nil nil)))
-  (dotimes (a 3) ; Remove unneccessary double space.  Why is dotimes neessary despite the while?
+  (dotimes (_a 3) ; Remove unneccessary double space.  Why is dotimes neessary despite the while?
     (save-excursion
       (while (re-search-backward "\\[\\(.*\\S-?\\)\\s-\\{2,\\}\\(\\S-?.*\\)\\]" (line-beginning-position) t)
         (replace-match "[\\1 \\2]" nil nil))))

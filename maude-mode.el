@@ -24,7 +24,11 @@
 ;; Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ;; MA 02111-1307 USA
 
+;;; Commentary:
+;;
 
+;; A major mode for the rewriting logic language Maude
+;; (http://maude.cs.illinois.edu/w/index.php/The_Maude_System).
 
 ;; This started with inspiration from Scott Andrew Borton's language
 ;; mode creation tutorial,
@@ -33,13 +37,16 @@
 ;; Todo:
 ;;
 ;; - Full Maude (and parametrised modules)
-;; 
+;;
 ;; - C-u C-c C-c to move point to end of inferior-maude buffer before
 ;;   evaluating buffer.
 ;;
 ;; - Sometimes font-lock gets into an endless loop
 
+;;; Code:
+
 ;; stuff we need
+
 (require 'font-lock)
 (require 'comint)
 (require 'compile)
@@ -52,7 +59,6 @@
 (require 'rx)
 (eval-when-compile (require 'cl))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defgroup maude nil
   "Major mode for editing files in the programming language Maude."
   :group 'languages)
@@ -122,7 +128,7 @@ This is intended to go into `comint-preoutput-filter-functions'."
 
 ;; for running Maude
 (defvar inferior-maude-buffer nil
-  "Defines the buffer to call the Maude engine in")
+  "Defines the buffer to call the Maude engine in.")
 
 ;;; This alist tells `compilation-minor-mode' how to detect and parse
 ;;; compile errors in Maude's output.
@@ -134,7 +140,7 @@ This is intended to go into `comint-preoutput-filter-functions'."
   "`compilation-error-regexp-alist' for inferior Maude.")
 
 (defun maude-send-region (start end)
-  "Send a region to the MAUDE process."
+  "Send the region from START to END to the maude process."
   (interactive "r")
   (if (buffer-live-p inferior-maude-buffer)
       (save-excursion

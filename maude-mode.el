@@ -56,6 +56,7 @@
 (require 'imenu)
 (require 'newcomment)
 (require 'rx)
+(require 'cl-lib)
 
 (defgroup maude nil
   "Major mode for editing files in the programming language Maude."
@@ -738,15 +739,15 @@ Currently handles only monoline comments."
            ((<= (point) 1) (setq not-indented nil))
            ((or (looking-at (concat start-regexp "(?[fo]?mod\\>"))
                 (looking-at (concat start-regexp "^(")))
-            (incf indentation maude-indent)
+            (cl-incf indentation maude-indent)
             (setq not-indented nil))
            ((looking-at (concat start-regexp "end"))
-            (incf indentation 0)
+            (cl-incf indentation 0)
             (setq not-indented nil))
            ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\>"))
                 (looking-at (concat start-regexp "\\<\\(var\\|op\\|sort\\|subsort\\)s?\\>"))
                 (looking-at (concat start-regexp "\\<\\(protecting\\|pr\\|extending\\|ex\\|including\\|inc\\)\\>")))
-            (incf indentation (* 2 maude-indent))
+            (cl-incf indentation (* 2 maude-indent))
             (setq not-indented nil))
            ;; Maude's object-based notation: align attributes after |
            ;; if we did not pass something looking like an object end.
@@ -756,18 +757,18 @@ Currently handles only monoline comments."
            ((and (< (maude-current-line) start-line)
                  (not seen-object-end)
                  (looking-at "< .+ : .+ |"))
-            (incf indentation (save-excursion (1+ (progn (search-forward "|")
+            (cl-incf indentation (save-excursion (1+ (progn (search-forward "|")
                                                          (current-column)))))
             (setq not-indented nil))
            ((or (looking-at "\\s(")
                 (looking-at "\\<if\\>"))
-            (incf indentation 2))
+            (cl-incf indentation 2))
            ((or (looking-at "\\s)")
                 (looking-at "\\<fi\\>"))
-            (decf indentation 2))
+            (cl-decf indentation 2))
            ((or (looking-at  "\\s-\\.\\s-*?$")
                 (looking-at  "\\s-\\.\\s-+\\*\\*\\*"))
-            (decf indentation maude-indent)))
+            (cl-decf indentation maude-indent)))
           (if not-indented (forward-char -1)))) ; eof save-excursion
       ;; (message "512 after while")
       ;; (print indentation)
@@ -779,7 +780,7 @@ Currently handles only monoline comments."
          ((or (looking-at (concat start-regexp "="))
               (looking-at (concat start-regexp "\\<\\(if\\|then\\|else\\|fi\\)\\s-"))
               (looking-at (concat start-regexp "to\\s-"))) ; Full Maude views
-          (decf indentation 2))
+          (cl-decf indentation 2))
          ((or (looking-at (concat start-regexp "\\<c?\\(rl\\|eq\\|mb\\)\\s-"))
               (looking-at (concat start-regexp "\\<\\(including\\|extending\\|protecting\\)\\s-"))
               (looking-at (concat start-regexp "\\<\\(inc\\|ext\\|pr\\)\\s-"))

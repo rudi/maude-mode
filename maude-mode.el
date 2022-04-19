@@ -978,26 +978,33 @@ Currently handles only monoline comments."
 ;;;###autoload
 (define-derived-mode maude-mode prog-mode "Maude"
   "Major mode for editing Maude files.
-  Provides syntax highlighting.  
-  \\[maude-indent-line] indents current line.
-  \\[run-maude] starts an interactive maude process.  
-  \\[run-full-maude] starts an interactive full maude process.
-  \\[maude-send-paragraph] sends current paragraph to the (full) maude process.
-  \\[maude-send-region] sends current region to the (full) maude process.
-  \\[maude-send-buffer] sends the entire buffer to the process.
-  \\[maude-switch-to-inferior-maude] jumps between source buffer and maude process buffer.
-  If you want certain keywords (try operator attributes) to be automatically expanded, put
-    (add-hook 'maude-mode-hook 
-			'(lambda () 
-         (abbrev-mode t)))
-  in your .emacs .
-  If you don't want the red warnings, put
-    (add-hook 'maude-mode-hook
-         '(lambda () 
-            (setq maude-warnings nil)))
-  in your .emacs .
-  The following keys are set:
-  \\{maude-mode-map}"
+Provides syntax highlighting.
+\\[maude-indent-line] indents current line.
+\\[run-maude] starts an interactive maude process.
+\\[run-full-maude] starts an interactive full maude process.
+\\[maude-send-paragraph] sends current paragraph to the (full)
+maude process.
+\\[maude-send-region] sends current region to the (full) maude
+process.
+\\[maude-send-buffer] sends the entire buffer to the process.
+\\[maude-switch-to-inferior-maude] jumps between source buffer
+and maude process buffer.
+
+If you want certain keywords (try operator attributes) to be
+automatically expanded, put
+ (add-hook 'maude-mode-hook 
+            '(lambda () 
+               (abbrev-mode t)))
+in your init file.
+
+If you don't want the red warnings, put
+  (add-hook 'maude-mode-hook
+            '(lambda () 
+                (setq maude-warnings nil)))
+in your init file.
+
+The following keys are set:
+\\{maude-mode-map}"
   :group 'maude
   :syntax-table maude-mode-syntax-table
   (define-key maude-mode-map (kbd "C-c C-c") 'maude-next-action)
@@ -1019,8 +1026,6 @@ Currently handles only monoline comments."
   (set (make-local-variable 'end-of-defun-function) 'maude-end-of-defun)
   ;; Abbrevs
   (setq local-abbrev-table maude-mode-abbrev-table)
-  ;; Menu
-  (easy-menu-add maude-mode-menu maude-mode-map)
   ;; imenu
   (setq imenu-generic-expression maude-imenu-generic-expression)
   ;; speedbar support

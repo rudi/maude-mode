@@ -479,11 +479,11 @@ Use \\[describe-mode] in the process buffer for a list of commands."
    (list (concat (maude--flk-keyword "resume\\|abort\\|step\\|where") maude--flk-end-command)
          '(1 maude-start-face t t) '(2 maude-end-face t t))
 ;;; MODULE
-   (list "(?\\(fmod\\|mod\\|view\\|fth\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
+   (list "(?\\(mod\\|fmod\\|omod\\|view\\|fth\\)\\s-+\\(.+\\)\\s-+\\(is\\)"
          '(1 maude-start-face prepend t)
          '(2 maude-module-name-face prepend t)
          '(3 maude-start-face prepend t))
-   (list  "\\(endm\\|endfm\\|endv\\|endfth\\)"
+   (list  "\\(endm\\|endfm\\|endom\\|endv\\|endfth\\)"
           '(1 maude-start-face prepend t))
    (list (concat "\\<\\(\\<protecting\\|extending\\|including\\|ex\\|pr\\|inc\\)\\>\\s-+" maude--flk-mod-exp maude--flk-end)
          '(1 font-lock-keyword-face append t) '(2 maude-module-name-face prepend t)'(3 maude-end-face))
